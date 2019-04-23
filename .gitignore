@@ -1,0 +1,15 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# Configuration files
+.DS_Store
+MatakDBConnector/.DS_Store
+MatakDBConnector/DbConfig.json
+MatakDBConnector/bin/.DS_Store
+MatakDBConnector/bin/Debug/.DS_Store
+DbConfig.json
