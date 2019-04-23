@@ -1,0 +1,9 @@
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/bin/Debug/netstandard2.0/MatakDBConnector.deps.json
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/bin/Debug/netstandard2.0/MatakDBConnector.dll
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/bin/Debug/netstandard2.0/MatakDBConnector.pdb
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.csprojAssemblyReference.cache
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.csproj.CoreCompileInputs.cache
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.AssemblyInfoInputs.cache
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.AssemblyInfo.cs
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.dll
+/Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.pdb
