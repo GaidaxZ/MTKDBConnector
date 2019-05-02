@@ -8,6 +8,7 @@ namespace MatakDBConnector
         public int AddNewRoute(Route newRoute, out string errorMessage)
         {
             errorMessage = null;
+           
             try
             {
                 DbConnector database = new DbConnector();
@@ -16,7 +17,7 @@ namespace MatakDBConnector
                 var command = new NpgsqlCommand();
                 command.Connection = database.Connection;
                 command.CommandText =
-                    "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated )";
+                    "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area))";
                 command.Parameters.AddWithValue("name", newRoute.Name);
                 command.Parameters.AddWithValue("start_datetime", newRoute.StartDatetime);
                 command.Parameters.AddWithValue("end_datetime", newRoute.EndDatetime);
@@ -31,6 +32,7 @@ namespace MatakDBConnector
                 command.Parameters.AddWithValue("note", newRoute.Note);
                 command.Parameters.AddWithValue("created", DateTime.Now);
                 command.Parameters.AddWithValue("updated", DateTime.Now);
+                command.Parameters.AddWithValue("trip_area", newRoute.GeoJsonString);
 
                 command.ExecuteNonQuery();
                 database.Disconnect();
@@ -45,7 +47,7 @@ namespace MatakDBConnector
         }
 
         public int AddNewRoute(string name, DateTime startDateTime, DateTime endDateTime, int reasonId,
-            int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId, string note, out string errorMessage)
+            int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId, string note, string geoJsonString, out string errorMessage)
         {
             errorMessage = null;
             try
@@ -55,7 +57,7 @@ namespace MatakDBConnector
                 
                 var command = new NpgsqlCommand();
                 command.Connection = database.Connection;
-                command.CommandText = "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated )";
+                command.CommandText = "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area))";
                 command.Parameters.AddWithValue("name", name);
                 command.Parameters.AddWithValue("start_datetime", startDateTime);
                 command.Parameters.AddWithValue("end_datetime", endDateTime);
@@ -70,6 +72,7 @@ namespace MatakDBConnector
                 command.Parameters.AddWithValue("note", note);
                 command.Parameters.AddWithValue("created", DateTime.Now);
                 command.Parameters.AddWithValue("updated", DateTime.Now);
+                command.Parameters.AddWithValue("trip_area", geoJsonString);
 
                 command.ExecuteNonQuery();
                 database.Disconnect();

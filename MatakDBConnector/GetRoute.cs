@@ -9,6 +9,12 @@ namespace MatakDBConnector
         public Route ById(int RouteID, out string errorMessage)
         {
             //TODO: what to return if route ID is not found? Suggestion if route_id is 0 then no route.
+            
+            //TODO: getRouteByCreator
+            //TODO: getRouteByOrgID
+            //TODO: count of routes by orgID
+            //TODO: merge set and get route to one class
+            
             errorMessage = null;
             Route route = new Route();
             try
@@ -18,7 +24,10 @@ namespace MatakDBConnector
                 
                 var command = new NpgsqlCommand();
                 command.Connection = database.Connection;
-                command.CommandText = "SELECT * FROM route WHERE route_id = (@p)";
+                command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE route_id = (@p)";
+                //TODO: change to store procedures
+                //TODO: change * to actual column names 
+                //TODO: to generate geoJson use PostGIS method INSIDE select
                 command.Parameters.AddWithValue("p", RouteID);
 
                 var reader = command.ExecuteReader();
@@ -38,6 +47,7 @@ namespace MatakDBConnector
                     route.SentToUserId = reader.GetInt32(10);
                     route.ApprovedByUserId = reader.GetInt32(11);
                     route.Note = reader.GetString(12);
+                    route.GeoJsonString = reader.GetString(13);
                 }
                 
                 database.Disconnect();
@@ -65,7 +75,7 @@ namespace MatakDBConnector
                 
                 var command = new NpgsqlCommand();
                 command.Connection = database.Connection;
-                command.CommandText = "SELECT * FROM route";
+                command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route";
 
                 var reader = command.ExecuteReader();
 
@@ -86,6 +96,7 @@ namespace MatakDBConnector
                     route.SentToUserId = reader.GetInt32(10);
                     route.ApprovedByUserId = reader.GetInt32(11);
                     route.Note = reader.GetString(12);
+                    route.GeoJsonString = reader.GetString(13);
                     
                     allRoutes.Add(route);
                 }
@@ -111,7 +122,7 @@ namespace MatakDBConnector
                 
                 var command = new NpgsqlCommand();
                 command.Connection = database.Connection;
-                command.CommandText = "SELECT * FROM route WHERE org_id = (@p)";
+                command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE org_id = (@p)";
                 command.Parameters.AddWithValue("p", orgId);
 
                 var reader = command.ExecuteReader();
@@ -133,6 +144,7 @@ namespace MatakDBConnector
                     route.SentToUserId = reader.GetInt32(10);
                     route.ApprovedByUserId = reader.GetInt32(11);
                     route.Note = reader.GetString(12);
+                    route.GeoJsonString = reader.GetString(13);
                     
                     allRoutesByOrgId.Add(route);
                     

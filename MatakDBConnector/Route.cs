@@ -4,19 +4,20 @@ namespace MatakDBConnector
 {
     public class Route
     {
-        int routeId;
-        string name;
-        DateTime startDatetime;
-        DateTime endDatetime;
-        int geojsonDocId;
-        int reasonId;
-        int priorityId;
-        int statusId;
-        int orgId;
-        int createdByUserId;
-        int sentToUserId;
-        int approvedByUserId;
-        string note;
+        private int routeId;
+        private string name;
+        private DateTime startDatetime;
+        private DateTime endDatetime;
+        private int geojsonDocId;
+        private int reasonId;
+        private int priorityId;
+        private int statusId;
+        private int orgId;
+        private int createdByUserId;
+        private int sentToUserId;
+        private int approvedByUserId;
+        private string note;
+        private string geoJsonString;
 
         public Route()
         {
@@ -33,11 +34,12 @@ namespace MatakDBConnector
             sentToUserId = 0;
             approvedByUserId = 0;
             note = "0";
+            geoJsonString = "0";
         }
         
         public Route(int routeId, string name, DateTime startDatetime, DateTime endDatetime, int geojsonDocId,
             int reasonId, int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId,
-            int approvedByUserId, string note)
+            int approvedByUserId, string note, string geoJsonString)
         {
             this.routeId = routeId;
             this.name = name;
@@ -52,6 +54,7 @@ namespace MatakDBConnector
             this.sentToUserId = sentToUserId;
             this.approvedByUserId = approvedByUserId;
             this.note = note;
+            this.geoJsonString = geoJsonString;
         }
 
         public int RouteId
@@ -130,6 +133,12 @@ namespace MatakDBConnector
         {
             get => note;
             set => note = value;
+        }
+
+        public string GeoJsonString
+        {
+            get => geoJsonString;
+            set => geoJsonString = value;
         }
     }
 }
