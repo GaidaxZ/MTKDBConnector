@@ -5,10 +5,11 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class RouteController
+    public class RouteController: Route
     {
         public void AddNewRoute(Route newRoute, out string errorMessage)
         {
+            //TODO: return id of the entity created
             errorMessage = null;
             DbConnector database = new DbConnector();
             
@@ -107,7 +108,7 @@ namespace MatakDBConnector
             
             errorMessage = null;
             DbConnector database = new DbConnector();
-            Route route = new Route();
+            Route route = null;
             
             try
             {
@@ -117,27 +118,13 @@ namespace MatakDBConnector
                 command.Connection = database.Connection;
                 command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE route_id = (@p)";
                 //TODO: change to store procedures
-                //TODO: change * to actual column names 
                 command.Parameters.AddWithValue("p", RouteID);
 
                 var reader = command.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    route.RouteId = reader.GetInt32(0);
-                    route.Name = reader.GetString(1);
-                    route.StartDatetime = reader.GetDateTime(2);
-                    route.EndDatetime = reader.GetDateTime(3);
-                    route.GeojsonDocId = reader.GetInt32(4);
-                    route.ReasonId = reader.GetInt32(5);
-                    route.PriorityId = reader.GetInt32(6);
-                    route.StatusId = reader.GetInt32(7);
-                    route.OrgId = reader.GetInt32(8);
-                    route.CreatedByUserId = reader.GetInt32(9);
-                    route.SentToUserId = reader.GetInt32(10);
-                    route.ApprovedByUserId = reader.GetInt32(11);
-                    route.Note = reader.GetString(12);
-                    route.GeoJsonString = reader.GetString(13);
+                    route = RouteMaker(reader);
                 }
 
                 return route;
@@ -176,23 +163,7 @@ namespace MatakDBConnector
 
                 while (reader.Read())
                 {
-                    Route route = new Route();
-                    
-                    route.RouteId = reader.GetInt32(0);
-                    route.Name = reader.GetString(1);
-                    route.StartDatetime = reader.GetDateTime(2);
-                    route.EndDatetime = reader.GetDateTime(3);
-                    route.GeojsonDocId = reader.GetInt32(4);
-                    route.ReasonId = reader.GetInt32(5);
-                    route.PriorityId = reader.GetInt32(6);
-                    route.StatusId = reader.GetInt32(7);
-                    route.OrgId = reader.GetInt32(8);
-                    route.CreatedByUserId = reader.GetInt32(9);
-                    route.SentToUserId = reader.GetInt32(10);
-                    route.ApprovedByUserId = reader.GetInt32(11);
-                    route.Note = reader.GetString(12);
-                    route.GeoJsonString = reader.GetString(13);
-                    
+                    Route route = RouteMaker(reader);
                     allRoutes.Add(route);
                 }
                 return allRoutes;
@@ -231,25 +202,8 @@ namespace MatakDBConnector
 
                 while (reader.Read())
                 {
-                    Route route = new Route();
-                    
-                    route.RouteId = reader.GetInt32(0);
-                    route.Name = reader.GetString(1);
-                    route.StartDatetime = reader.GetDateTime(2);
-                    route.EndDatetime = reader.GetDateTime(3);
-                    route.GeojsonDocId = reader.GetInt32(4);
-                    route.ReasonId = reader.GetInt32(5);
-                    route.PriorityId = reader.GetInt32(6);
-                    route.StatusId = reader.GetInt32(7);
-                    route.OrgId = reader.GetInt32(8);
-                    route.CreatedByUserId = reader.GetInt32(9);
-                    route.SentToUserId = reader.GetInt32(10);
-                    route.ApprovedByUserId = reader.GetInt32(11);
-                    route.Note = reader.GetString(12);
-                    route.GeoJsonString = reader.GetString(13);
-                    
-                    allRoutesByOrgId.Add(route);
-                    
+                    Route route = RouteMaker(reader);                    
+                    allRoutesByOrgId.Add(route);             
                 }
 
                 return allRoutesByOrgId;
@@ -289,25 +243,8 @@ namespace MatakDBConnector
 
                 while (reader.Read())
                 {
-                    Route route = new Route();
-                    
-                    route.RouteId = reader.GetInt32(0);
-                    route.Name = reader.GetString(1);
-                    route.StartDatetime = reader.GetDateTime(2);
-                    route.EndDatetime = reader.GetDateTime(3);
-                    route.GeojsonDocId = reader.GetInt32(4);
-                    route.ReasonId = reader.GetInt32(5);
-                    route.PriorityId = reader.GetInt32(6);
-                    route.StatusId = reader.GetInt32(7);
-                    route.OrgId = reader.GetInt32(8);
-                    route.CreatedByUserId = reader.GetInt32(9);
-                    route.SentToUserId = reader.GetInt32(10);
-                    route.ApprovedByUserId = reader.GetInt32(11);
-                    route.Note = reader.GetString(12);
-                    route.GeoJsonString = reader.GetString(13);
-                    
+                    Route route = RouteMaker(reader);
                     allRoutesByOrgId.Add(route);
-                    
                 }
 
                 return allRoutesByOrgId;

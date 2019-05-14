@@ -1,8 +1,9 @@
 using System;
+using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Route
+    public class Route: DbConnector
     {
         private int routeId;
         private string name;
@@ -55,6 +56,26 @@ namespace MatakDBConnector
             this.approvedByUserId = approvedByUserId;
             this.note = note;
             this.geoJsonString = geoJsonString;
+        }
+
+        public Route RouteMaker(NpgsqlDataReader reader)
+        {
+            RouteId = reader.GetInt32(0);
+            Name = reader.GetString(1);
+            StartDatetime = reader.GetDateTime(2);
+            EndDatetime = reader.GetDateTime(3);
+            GeojsonDocId = reader.GetInt32(4);
+            ReasonId = reader.GetInt32(5);
+            PriorityId = reader.GetInt32(6);
+            StatusId = reader.GetInt32(7);
+            OrgId = reader.GetInt32(8);
+            CreatedByUserId = reader.GetInt32(9);
+            SentToUserId = reader.GetInt32(10);
+            ApprovedByUserId = reader.GetInt32(11);
+            Note = reader.GetString(12);
+            GeoJsonString = reader.GetString(13);
+
+            return this;
         }
 
         public int RouteId
