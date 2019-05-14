@@ -28,14 +28,14 @@ namespace MatakDBConnector
 
         public Vehicle(int vehicleId, string plateNumber, int orgId, int photoId, int typeId, string model, string color, string manufacturer)
         {
-            this._vehicleId = vehicleId;
-            this._plateNumber = plateNumber;
-            this._orgId = orgId;
-            this._photoId = photoId;
-            this._typeId = typeId;
-            this._model = model;
-            this._color = color;
-            this._manufacturer = manufacturer;
+            _vehicleId = vehicleId;
+            _plateNumber = plateNumber;
+            _orgId = orgId;
+            _photoId = photoId;
+            _typeId = typeId;
+            _model = model;
+            _color = color;
+            _manufacturer = manufacturer;
         }
 
         public Vehicle VehicleMaker(NpgsqlDataReader reader)

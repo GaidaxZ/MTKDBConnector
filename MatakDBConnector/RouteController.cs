@@ -99,7 +99,6 @@ namespace MatakDBConnector
                 
                 Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE route_id = (@p)";
                 Command.Parameters.AddWithValue("p", RouteID);
-
                 Reader = Command.ExecuteReader();
 
                 while (Reader.Read())
@@ -132,7 +131,6 @@ namespace MatakDBConnector
                 
                 Command.CommandText = "SELECT count(*) FROM route WHERE org_id = (@p)";
                 Command.Parameters.AddWithValue("p", OrgId);
-
                 Reader = Command.ExecuteReader();
 
                 while (Reader.Read())
@@ -164,7 +162,6 @@ namespace MatakDBConnector
                 Connect();
 
                 Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route";
-
                 Reader = Command.ExecuteReader();
 
                 while (Reader.Read())
@@ -196,7 +193,6 @@ namespace MatakDBConnector
                 
                 Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE org_id = (@p)";
                 Command.Parameters.AddWithValue("p", orgId);
-
                 Reader = Command.ExecuteReader();
 
                 while (Reader.Read())
@@ -230,7 +226,6 @@ namespace MatakDBConnector
 
                 Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE created_by_user_id = (@p)";
                 Command.Parameters.AddWithValue("p", createdByUserId);
-                
                 Reader = Command.ExecuteReader();
                 
                 while (Reader.Read())

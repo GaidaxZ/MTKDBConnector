@@ -6,6 +6,7 @@ namespace MatakDBConnector
 {
     public class Route : DbConnector
     {
+        //TODO add created and updated dates 
         private int _routeId;
         private string _name;
         private DateTime _startDatetime;

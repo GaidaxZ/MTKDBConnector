@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Npgsql;
 
 namespace MatakDBConnector
 {
@@ -16,6 +15,38 @@ namespace MatakDBConnector
                 Connect();
 
                 Command.CommandText = "SELECT * FROM playground.public.user";
+                Reader = Command.ExecuteReader();
+
+                while (Reader.Read())
+                {
+                    allUsers.Add(UserMaker(Reader));
+                }
+
+                return allUsers;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                errorMessage = e.ToString();
+                throw;
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+        
+        public List<User> getAllUsersByOrgId(int orgId, out string errorMessage)
+        {
+            List<User> allUsers = new List<User>();
+            errorMessage = null;
+
+            try
+            {
+                Connect();
+
+                Command.CommandText = "SELECT * FROM playground.public.user WHERE org_id = (@p)";
+                Command.Parameters.AddWithValue("p", orgId);
                 Reader = Command.ExecuteReader();
 
                 while (Reader.Read())
