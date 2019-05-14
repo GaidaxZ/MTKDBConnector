@@ -4,39 +4,25 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class OrganizationController
+    public class OrganizationController : Organization
     {
         public List<Organization> getAllOrganizations(out string errorMessage)
         {
             List<Organization> allOrganizations = new List<Organization>();
             errorMessage = null;
-            
+
             try
             {
-                DbConnector database = new DbConnector();
-                database.Connect();
+                Connect();
                 
-                var command = new NpgsqlCommand();
-                command.Connection = database.Connection;
-                command.CommandText = "SELECT * FROM organization";
+                Command.CommandText = "SELECT * FROM organization";
+                Reader = Command.ExecuteReader();
 
-                var reader = command.ExecuteReader();
-
-                while (reader.Read())
+                while (Reader.Read())
                 {
-                    Organization organization = new Organization();
-
-                    organization.OrgId = reader.GetInt32(0);
-                    organization.Name = reader.GetString(1);
-                    organization.MainUserId = reader.GetInt32(2);
-                    organization.CountryId = reader.GetInt32(3);
-                    organization.AddressId = reader.GetInt32(4);
-                    organization.FaxId = reader.GetInt32(5);
-                    organization.PhoneId = reader.GetInt32(8);
-                    
-                    allOrganizations.Add(organization);
+                    allOrganizations.Add(OrganizationMaker(Reader));
                 }
-                database.Disconnect();
+
                 return allOrganizations;
             }
             catch (Exception e)
@@ -44,6 +30,10 @@ namespace MatakDBConnector
                 Console.WriteLine(e);
                 errorMessage = e.ToString();
                 throw;
+            }
+            finally
+            {
+                Disconnect();
             }
         }
     }

@@ -1,77 +1,94 @@
+using Npgsql;
+
 namespace MatakDBConnector
 {
-    public class Organization
+    public class Organization : DbConnector
     {
-        private int orgId;
-        private string name;
-        private int mainUserId;
-        private int countryId;
-        private int addressId;
-        private int faxId;
-        private int phoneId;
+        private int _orgId;
+        private string _name;
+        private int _mainUserId;
+        private int _countryId;
+        private int _addressId;
+        private int _faxId;
+        private int _phoneId;
 
         public Organization()
         {
-            orgId = 0;
-            name = "0";
-            mainUserId = 0;
-            countryId = 0;
-            addressId = 0;
-            faxId = 0;
-            phoneId = 0;
+            _orgId = 0;
+            _name = "0";
+            _mainUserId = 0;
+            _countryId = 0;
+            _addressId = 0;
+            _faxId = 0;
+            _phoneId = 0;
         }
 
         public Organization(int orgId, string name, int mainUserId, int countryId, int addressId, int faxId, int phoneId)
         {
-            this.orgId = orgId;
-            this.name = name;
-            this.mainUserId = mainUserId;
-            this.countryId = countryId;
-            this.addressId = addressId;
-            this.faxId = faxId;
-            this.phoneId = phoneId;
+            this._orgId = orgId;
+            this._name = name;
+            this._mainUserId = mainUserId;
+            this._countryId = countryId;
+            this._addressId = addressId;
+            this._faxId = faxId;
+            this._phoneId = phoneId;
+        }
+        
+        public Organization OrganizationMaker(NpgsqlDataReader reader)
+        {
+            Organization organization = new Organization();
+            
+            organization.OrgId = reader.GetInt32(0);
+            organization.Name = reader.GetString(1);
+            organization.MainUserId = reader.GetInt32(2);
+            organization.CountryId = reader.GetInt32(3);
+            organization.AddressId = reader.GetInt32(4);
+            organization.FaxId = reader.GetInt32(5);
+            organization.PhoneId = reader.GetInt32(8);
+                
+            return organization;
         }
 
         public int OrgId
         {
-            get => orgId;
-            set => orgId = value;
+            get => _orgId;
+            set => _orgId = value;
         }
 
         public string Name
         {
-            get => name;
-            set => name = value;
+            get => _name;
+            set => _name = value;
         }
 
         public int MainUserId
         {
-            get => mainUserId;
-            set => mainUserId = value;
+            get => _mainUserId;
+            set => _mainUserId = value;
         }
 
         public int CountryId
         {
-            get => countryId;
-            set => countryId = value;
+            get => _countryId;
+            set => _countryId = value;
         }
 
         public int AddressId
         {
-            get => addressId;
-            set => addressId = value;
+            get => _addressId;
+            set => _addressId = value;
         }
 
         public int FaxId
         {
-            get => faxId;
-            set => faxId = value;
+            get => _faxId;
+            set => _faxId = value;
         }
 
         public int PhoneId
         {
-            get => phoneId;
-            set => phoneId = value;
+            get => _phoneId;
+            set => _phoneId = value;
         }
     }
 }

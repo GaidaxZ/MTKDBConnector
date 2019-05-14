@@ -1,95 +1,114 @@
+using Npgsql;
+
 namespace MatakDBConnector
 {
-    public class User
+    public class User : DbConnector
     {
-        private int userId;
-        private string password;
-        private int phoneId;
-        private string lastName;
-        private string firstName;
-        private int permissionId;
-        private int orgId;
-        private string email;
-        private string nickname;
+        private int _userId;
+        private string _password;
+        private int _phoneId;
+        private string _lastName;
+        private string _firstName;
+        private int _permissionId;
+        private int _orgId;
+        private string _email;
+        private string _nickname;
 
         public User()
         {
-            userId = 0;
-            password = "0";
-            phoneId = 0;
-            lastName = "0";
-            firstName = "0";
-            permissionId = 0;
-            orgId = 0;
-            email = "0";
-            nickname = "0";
+            _userId = 0;
+            _password = "0";
+            _phoneId = 0;
+            _lastName = "0";
+            _firstName = "0";
+            _permissionId = 0;
+            _orgId = 0;
+            _email = "0";
+            _nickname = "0";
         }
 
         public User(int userId, string password, int phoneId, string lastName, string firstName, int permissionId, int orgId, string email, string nickname)
         {
-            this.userId = userId;
-            this.password = password;
-            this.phoneId = phoneId;
-            this.lastName = lastName;
-            this.firstName = firstName;
-            this.permissionId = permissionId;
-            this.orgId = orgId;
-            this.email = email;
-            this.nickname = nickname;
+            _userId = userId;
+            _password = password;
+            _phoneId = phoneId;
+            _lastName = lastName;
+            _firstName = firstName;
+            _permissionId = permissionId;
+            _orgId = orgId;
+            _email = email;
+            _nickname = nickname;
+        }
+        
+        public User UserMaker(NpgsqlDataReader reader)
+        {
+            User user = new User();
+            
+            user.UsedId = reader.GetInt32(0);
+            user.Password = reader.GetString(1);
+            user.PhoneId = reader.GetInt32(2);
+            user.LastName = reader.GetString(3);
+            user.FirstName = reader.GetString(4);
+            user.PermissionId = reader.GetInt32(5);
+            user.OrgId = reader.GetInt32(6);
+            user.Email = reader.GetString(7);
+            user.Nickname = reader.GetString(8);
+                
+            return user;
         }
 
         public int UsedId
         {
-            get => userId;
-            set => userId = value;
+            get => _userId;
+            set => _userId = value;
         }
 
         public string Password
         {
-            get => password;
-            set => password = value;
+            get => _password;
+            set => _password = value;
         }
 
         public int PhoneId
         {
-            get => phoneId;
-            set => phoneId = value;
+            get => _phoneId;
+            set => _phoneId = value;
         }
 
         public string LastName
         {
-            get => lastName;
-            set => lastName = value;
+            get => _lastName;
+            set => _lastName = value;
         }
 
         public string FirstName
         {
-            get => firstName;
-            set => firstName = value;
+            get => _firstName;
+            set => _firstName = value;
         }
 
         public int PermissionId
         {
-            get => permissionId;
-            set => permissionId = value;
+            get => _permissionId;
+            set => _permissionId = value;
         }
 
         public int OrgId
         {
-            get => orgId;
-            set => orgId = value;
+            get => _orgId;
+            set => _orgId = value;
         }
 
         public string Email
         {
-            get => email;
-            set => email = value;
+            get => _email;
+            set => _email = value;
         }
 
         public string Nickname
         {
-            get => nickname;
-            set => nickname = value;
+            get => _nickname;
+            set => _nickname = value;
         }
     }
 }

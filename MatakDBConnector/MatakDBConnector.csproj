@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <Compile Remove="Permission.cs" />
+      <Compile Remove="GetPermission.cs" />
     </ItemGroup>
 
 </Project>

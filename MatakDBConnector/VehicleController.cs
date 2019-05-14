@@ -4,40 +4,25 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class VehicleController
+    public class VehicleController : Vehicle
     {
         public List<Vehicle> getAllVehicles(out string errorMessage)
         {
             List<Vehicle> allVehicles = new List<Vehicle>();
             errorMessage = null;
-            
+
             try
             {
-                DbConnector database = new DbConnector();
-                database.Connect();
-                
-                var command = new NpgsqlCommand();
-                command.Connection = database.Connection;
-                command.CommandText = "SELECT * FROM vehicle";
+                Connect();
 
-                var reader = command.ExecuteReader();
+                Command.CommandText = "SELECT * FROM vehicle";
+                Reader = Command.ExecuteReader();
 
-                while (reader.Read())
+                while (Reader.Read())
                 {
-                    Vehicle vehicle = new Vehicle();
-
-                    vehicle.VehicleId = reader.GetInt32(0);
-                    vehicle.PlateNumber = reader.GetString(1);
-                    vehicle.OrgId = reader.GetInt32(2);
-                    vehicle.PhotoId = reader.GetInt32(3);
-                    vehicle.TypeId = reader.GetInt32(4);
-                    vehicle.Model = reader.GetString(5);
-                    vehicle.Color = reader.GetString(6);
-                    vehicle.Manufacturer = reader.GetString(7);
-                    
-                    allVehicles.Add(vehicle);
+                    allVehicles.Add(VehicleMaker(Reader));
                 }
-                database.Disconnect();
+
                 return allVehicles;
             }
             catch (Exception e)
@@ -45,6 +30,10 @@ namespace MatakDBConnector
                 Console.WriteLine(e);
                 errorMessage = e.ToString();
                 throw;
+            }
+            finally
+            {
+                Disconnect();
             }
         }
     }

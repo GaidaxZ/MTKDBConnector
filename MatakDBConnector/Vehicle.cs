@@ -1,89 +1,105 @@
-using System.Drawing;
+
+using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Vehicle
+    public class Vehicle : DbConnector
     {
-        private int vehicleId;
-        private string plateNumber;
-        private int orgId;
-        private int photoId;
-        private int typeId;
-        private string model;
-        private string color;
-        private string manufacturer;
+        private int _vehicleId;
+        private string _plateNumber;
+        private int _orgId;
+        private int _photoId;
+        private int _typeId;
+        private string _model;
+        private string _color;
+        private string _manufacturer;
 
         public Vehicle()
         {
-            vehicleId = 0;
-            plateNumber = "0";
-            orgId = 0;
-            photoId = 0;
-            typeId = 0;
-            model = "0";
-            color = "0";
-            manufacturer = "0";
+            _vehicleId = 0;
+            _plateNumber = "0";
+            _orgId = 0;
+            _photoId = 0;
+            _typeId = 0;
+            _model = "0";
+            _color = "0";
+            _manufacturer = "0";
         }
 
         public Vehicle(int vehicleId, string plateNumber, int orgId, int photoId, int typeId, string model, string color, string manufacturer)
         {
-            this.vehicleId = vehicleId;
-            this.plateNumber = plateNumber;
-            this.orgId = orgId;
-            this.photoId = photoId;
-            this.typeId = typeId;
-            this.model = model;
-            this.color = color;
-            this.manufacturer = manufacturer;
+            this._vehicleId = vehicleId;
+            this._plateNumber = plateNumber;
+            this._orgId = orgId;
+            this._photoId = photoId;
+            this._typeId = typeId;
+            this._model = model;
+            this._color = color;
+            this._manufacturer = manufacturer;
         }
 
+        public Vehicle VehicleMaker(NpgsqlDataReader reader)
+        {
+            Vehicle vehicle = new Vehicle();
+            
+            vehicle.VehicleId = reader.GetInt32(0);
+            vehicle.PlateNumber = reader.GetString(1);
+            vehicle.OrgId = reader.GetInt32(2);
+            vehicle.PhotoId = reader.GetInt32(3);
+            vehicle.TypeId = reader.GetInt32(4);
+            vehicle.Model = reader.GetString(5);
+            vehicle.Color = reader.GetString(6);
+            vehicle.Manufacturer = reader.GetString(7);
+                
+            return vehicle;
+        }
 
         public int VehicleId
         {
-            get => vehicleId;
-            set => vehicleId = value;
+            get => _vehicleId;
+            set => _vehicleId = value;
         }
 
         public string PlateNumber
         {
-            get => plateNumber;
-            set => plateNumber = value;
+            get => _plateNumber;
+            set => _plateNumber = value;
         }
 
         public int OrgId
         {
-            get => orgId;
-            set => orgId = value;
+            get => _orgId;
+            set => _orgId = value;
         }
 
         public int PhotoId
         {
-            get => photoId;
-            set => photoId = value;
+            get => _photoId;
+            set => _photoId = value;
         }
 
         public int TypeId
         {
-            get => typeId;
-            set => typeId = value;
+            get => _typeId;
+            set => _typeId = value;
         }
 
         public string Model
         {
-            get => model;
-            set => model = value;
+            get => _model;
+            set => _model = value;
         }
 
         public string Color
         {
-            get => color;
-            set => color = value;
+            get => _color;
+            set => _color = value;
         }
 
         public string Manufacturer
         {
-            get => manufacturer;
-            set => manufacturer = value;
+            get => _manufacturer;
+            set => _manufacturer = value;
         }
     }
 }

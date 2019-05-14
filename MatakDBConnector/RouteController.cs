@@ -10,6 +10,7 @@ namespace MatakDBConnector
         public int AddNewRoute(Route newRoute, out string errorMessage)
         {
             //TODO: consider improving this method by using inheritance properties
+            //TODO: change to store procedures
             errorMessage = null;
             
             try
@@ -97,7 +98,6 @@ namespace MatakDBConnector
                 Connect();
                 
                 Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE route_id = (@p)";
-                //TODO: change to store procedures
                 Command.Parameters.AddWithValue("p", RouteID);
 
                 Reader = Command.ExecuteReader();

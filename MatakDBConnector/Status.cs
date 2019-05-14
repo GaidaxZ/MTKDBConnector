@@ -1,41 +1,54 @@
+using Npgsql;
+
 namespace MatakDBConnector
 {
-    public class Status
+    public class Status : DbConnector
     {
-        private int id;
-        private string description;
-        private string color;
+        private int _id;
+        private string _description;
+        private string _color;
 
         public Status()
         {
-            id = 0;
-            description = "0";
-            color = "0";
+            _id = 0;
+            _description = "0";
+            _color = "0";
         }
 
         public Status(int id, string description, string color)
         {
-            this.id = id;
-            this.description = description;
-            this.color = color;
+            _id = id;
+            _description = description;
+            _color = color;
+        }
+        
+        public Status StatusMaker(NpgsqlDataReader reader)
+        {
+            Status status = new Status();
+            
+            status.Id = reader.GetInt32(0);
+            status.Description = reader.GetString(1);
+            status.Color = reader.GetString(2);
+                
+            return status;
         }
 
         public int Id
         {
-            get => id;
-            set => id = value;
+            get => _id;
+            set => _id = value;
         }
 
         public string Description
         {
-            get => description;
-            set => description = value;
+            get => _description;
+            set => _description = value;
         }
 
         public string Color
         {
-            get => color;
-            set => color = value;
+            get => _color;
+            set => _color = value;
         }
     }
 }
