@@ -7,9 +7,8 @@ namespace MatakDBConnector
 {
     public class RouteController : Route
     {
-        public void AddNewRoute(Route newRoute, out string errorMessage)
+        public int AddNewRoute(Route newRoute, out string errorMessage)
         {
-            //TODO: return id of the entity created
             //TODO: consider improving this method by using inheritance properties
             errorMessage = null;
             
@@ -18,7 +17,7 @@ namespace MatakDBConnector
                 Connect();
                 
                 Command.CommandText =
-                    "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area))";
+                    "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area)) RETURNING route_id";
                 Command.Parameters.AddWithValue("name", newRoute.Name);
                 Command.Parameters.AddWithValue("start_datetime", newRoute.StartDatetime);
                 Command.Parameters.AddWithValue("end_datetime", newRoute.EndDatetime);
@@ -35,7 +34,7 @@ namespace MatakDBConnector
                 Command.Parameters.AddWithValue("updated", DateTime.Now);
                 Command.Parameters.AddWithValue("trip_area", newRoute.GeoJsonString);
 
-                Command.ExecuteNonQuery();
+                return Convert.ToInt32(Command.ExecuteScalar());
             }
             catch (Exception e)
             {
@@ -49,7 +48,7 @@ namespace MatakDBConnector
             }
         }
 
-        public void AddNewRoute(string name, DateTime startDateTime, DateTime endDateTime, int reasonId,
+        public int AddNewRoute(string name, DateTime startDateTime, DateTime endDateTime, int reasonId,
             int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId, string note, string geoJsonString, out string errorMessage)
         {
             errorMessage = null;
@@ -59,7 +58,7 @@ namespace MatakDBConnector
                 Connect();
 
                 Command.CommandText =
-                    "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area))";
+                    "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area)) RETURNING route_id";
                 Command.Parameters.AddWithValue("name", name);
                 Command.Parameters.AddWithValue("start_datetime", startDateTime);
                 Command.Parameters.AddWithValue("end_datetime", endDateTime);
@@ -76,7 +75,7 @@ namespace MatakDBConnector
                 Command.Parameters.AddWithValue("updated", DateTime.Now);
                 Command.Parameters.AddWithValue("trip_area", geoJsonString);
 
-                Command.ExecuteNonQuery();
+                return Convert.ToInt32(Command.ExecuteScalar());
             }
             catch (Exception e)
             {
@@ -91,8 +90,6 @@ namespace MatakDBConnector
         }
         public Route GetRouteById(int RouteID, out string errorMessage)
         {
-            //TODO: count of routes by orgID
-            
             errorMessage = null;
             
             try
@@ -111,6 +108,39 @@ namespace MatakDBConnector
                 }
 
                 return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                errorMessage = e.ToString();
+                throw;
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+        
+        public int GetRoutesCountByOrgId(int OrgId, out string errorMessage)
+        {   
+            errorMessage = null;
+            var count = -1;
+            
+            try
+            {
+                Connect();
+                
+                Command.CommandText = "SELECT count(*) FROM route WHERE org_id = (@p)";
+                Command.Parameters.AddWithValue("p", OrgId);
+
+                Reader = Command.ExecuteReader();
+
+                while (Reader.Read())
+                {
+                     count = Reader.GetInt32(0);
+                }
+
+                return count;
             }
             catch (Exception e)
             {
