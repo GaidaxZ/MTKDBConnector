@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Route : DbConnector
+    public class Route
     {
         //TODO add created and updated dates 
         private int _routeId;

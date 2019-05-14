@@ -3,7 +3,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Vehicle : DbConnector
+    public class Vehicle
     {
         private int _vehicleId;
         private string _plateNumber;

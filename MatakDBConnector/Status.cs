@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Status : DbConnector
+    public class Status
     {
         private int _id;
         private string _description;

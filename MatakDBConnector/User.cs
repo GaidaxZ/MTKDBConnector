@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class User : DbConnector
+    public class User
     {
         private int _userId;
         private string _password;

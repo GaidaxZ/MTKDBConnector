@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MatakDBConnector
 {
-    public class ReasonController : Reason
+    public class ReasonController : DbConnector
     {
         public List<Reason> GetAllReasons(out string errorMessage)
         {
@@ -19,7 +19,8 @@ namespace MatakDBConnector
 
                 while (Reader.Read())
                 {
-                    allReasons.Add(ReasonMaker(Reader));
+                    Reason reason = new Reason();
+                    allReasons.Add(reason.ReasonMaker(Reader));
                 }
 
                 return allReasons;

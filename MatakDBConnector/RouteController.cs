@@ -5,7 +5,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class RouteController : Route
+    public class RouteController : DbConnector
     {
         public int AddNewRoute(Route newRoute, out string errorMessage)
         {
@@ -89,6 +89,47 @@ namespace MatakDBConnector
                 Disconnect();
             }
         }
+        
+        public int UpdateRouteId(Route newRoute, int routeId, out string errorMessage)
+        {
+            errorMessage = null;
+            
+            try
+            {
+                Connect();
+                
+                Command.CommandText = "UPDATE route SET name = (@name), start_datetime = (@start_datetime), end_datetime = (@end_datetime), geojson_doc_id = (@geojson_doc_id), reason_id = (@reason_id), priority_id = (@priority_id), status_id = (@status_id), org_id = (@org_id), created_by_user_id = (@created_by_user_id), sent_to_user_id = (@sent_to_user_id), approved_by_user_id = (@approved_by_user_id), note = (@note), created = (@created), updated = (@updated), trip_area = st_geomfromgeojson(@trip_area) WHERE route_id = (@p)";
+                Command.Parameters.AddWithValue("name", newRoute.Name);
+                Command.Parameters.AddWithValue("start_datetime", newRoute.StartDatetime);
+                Command.Parameters.AddWithValue("end_datetime", newRoute.EndDatetime);
+                Command.Parameters.AddWithValue("geojson_doc_id", 0);
+                Command.Parameters.AddWithValue("reason_id", newRoute.ReasonId);
+                Command.Parameters.AddWithValue("priority_id", newRoute.PriorityId);
+                Command.Parameters.AddWithValue("status_id", newRoute.StatusId);
+                Command.Parameters.AddWithValue("org_id", newRoute.OrgId);
+                Command.Parameters.AddWithValue("created_by_user_id", newRoute.CreatedByUserId);
+                Command.Parameters.AddWithValue("sent_to_user_id", newRoute.SentToUserId);
+                Command.Parameters.AddWithValue("approved_by_user_id", 0);
+                Command.Parameters.AddWithValue("note", newRoute.Note);
+                Command.Parameters.AddWithValue("created", DateTime.Now);
+                Command.Parameters.AddWithValue("updated", DateTime.Now);
+                Command.Parameters.AddWithValue("trip_area", newRoute.GeoJsonString);
+                Command.Parameters.AddWithValue("p", routeId);
+
+                return Convert.ToInt32(Command.ExecuteScalar());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                errorMessage = e.ToString();
+                throw;
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+        
         public Route GetRouteById(int RouteID, out string errorMessage)
         {
             errorMessage = null;
@@ -103,7 +144,8 @@ namespace MatakDBConnector
 
                 while (Reader.Read())
                 {
-                    return RouteMaker(Reader);
+                    Route route = new Route();
+                    return route.RouteMaker(Reader);
                 }
 
                 return null;
@@ -166,7 +208,8 @@ namespace MatakDBConnector
 
                 while (Reader.Read())
                 {
-                    allRoutes.Add(RouteMaker(Reader));
+                    Route route = new Route();
+                    allRoutes.Add(route.RouteMaker(Reader));
                 }
                 return allRoutes;
             }
@@ -197,7 +240,8 @@ namespace MatakDBConnector
 
                 while (Reader.Read())
                 {
-                    allRoutesByOrgId.Add(RouteMaker(Reader));          
+                    Route route = new Route();
+                    allRoutesByOrgId.Add(route.RouteMaker(Reader));          
                 }
 
                 return allRoutesByOrgId;
@@ -230,7 +274,8 @@ namespace MatakDBConnector
                 
                 while (Reader.Read())
                 {
-                    allRoutesByCreatorId.Add(RouteMaker(Reader));   
+                    Route route = new Route();
+                    allRoutesByCreatorId.Add(route.RouteMaker(Reader));   
                 }
 
                 return allRoutesByCreatorId;

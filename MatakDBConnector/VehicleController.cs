@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class VehicleController : Vehicle
+    public class VehicleController : DbConnector
     {
         public List<Vehicle> getAllVehicles(out string errorMessage)
         {
@@ -20,7 +20,8 @@ namespace MatakDBConnector
 
                 while (Reader.Read())
                 {
-                    allVehicles.Add(VehicleMaker(Reader));
+                    Vehicle vehicle = new Vehicle();
+                    allVehicles.Add(vehicle.VehicleMaker(Reader));
                 }
 
                 return allVehicles;

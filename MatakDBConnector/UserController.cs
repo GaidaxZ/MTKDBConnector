@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MatakDBConnector
 {
-    public class UserController : User
+    public class UserController : DbConnector
     {
         public List<User> getAllUsers(out string errorMessage)
         {
@@ -19,7 +19,8 @@ namespace MatakDBConnector
 
                 while (Reader.Read())
                 {
-                    allUsers.Add(UserMaker(Reader));
+                    User user = new User();
+                    allUsers.Add(user.UserMaker(Reader));
                 }
 
                 return allUsers;
@@ -51,7 +52,8 @@ namespace MatakDBConnector
 
                 while (Reader.Read())
                 {
-                    allUsers.Add(UserMaker(Reader));
+                    User user = new User();
+                    allUsers.Add(user.UserMaker(Reader));
                 }
 
                 return allUsers;

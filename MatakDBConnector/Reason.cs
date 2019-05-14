@@ -3,7 +3,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Reason : DbConnector
+    public class Reason
     {
         private int _reason_id;
         private string _description;

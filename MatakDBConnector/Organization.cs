@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Organization : DbConnector
+    public class Organization
     {
         private int _orgId;
         private string _name;
@@ -25,13 +25,13 @@ namespace MatakDBConnector
 
         public Organization(int orgId, string name, int mainUserId, int countryId, int addressId, int faxId, int phoneId)
         {
-            this._orgId = orgId;
-            this._name = name;
-            this._mainUserId = mainUserId;
-            this._countryId = countryId;
-            this._addressId = addressId;
-            this._faxId = faxId;
-            this._phoneId = phoneId;
+            _orgId = orgId;
+            _name = name;
+            _mainUserId = mainUserId;
+            _countryId = countryId;
+            _addressId = addressId;
+            _faxId = faxId;
+            _phoneId = phoneId;
         }
         
         public Organization OrganizationMaker(NpgsqlDataReader reader)
