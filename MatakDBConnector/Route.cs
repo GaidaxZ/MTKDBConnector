@@ -1,165 +1,168 @@
 using System;
+using System.Collections.Generic;
 using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Route: DbConnector
+    public class Route : DbConnector
     {
-        private int routeId;
-        private string name;
-        private DateTime startDatetime;
-        private DateTime endDatetime;
-        private int geojsonDocId;
-        private int reasonId;
-        private int priorityId;
-        private int statusId;
-        private int orgId;
-        private int createdByUserId;
-        private int sentToUserId;
-        private int approvedByUserId;
-        private string note;
-        private string geoJsonString;
+        private int _routeId;
+        private string _name;
+        private DateTime _startDatetime;
+        private DateTime _endDatetime;
+        private int _geojsonDocId;
+        private int _reasonId;
+        private int _priorityId;
+        private int _statusId;
+        private int _orgId;
+        private int _createdByUserId;
+        private int _sentToUserId;
+        private int _approvedByUserId;
+        private string _note;
+        private string _geoJsonString;
 
         public Route()
         {
-            routeId = 0;
-            name = "0";
-            startDatetime = DateTime.Now;
-            endDatetime = DateTime.Now;
-            geojsonDocId = 0;
-            reasonId = 0;
-            priorityId = 0;
-            statusId = 0;
-            orgId = 0;
-            createdByUserId = 0;
-            sentToUserId = 0;
-            approvedByUserId = 0;
-            note = "0";
-            geoJsonString = "0";
+            _routeId = 0;
+            _name = "0";
+            _startDatetime = DateTime.Now;
+            _endDatetime = DateTime.Now;
+            _geojsonDocId = 0;
+            _reasonId = 0;
+            _priorityId = 0;
+            _statusId = 0;
+            _orgId = 0;
+            _createdByUserId = 0;
+            _sentToUserId = 0;
+            _approvedByUserId = 0;
+            _note = "0";
+            _geoJsonString = "0";
         }
         
         public Route(int routeId, string name, DateTime startDatetime, DateTime endDatetime, int geojsonDocId,
             int reasonId, int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId,
             int approvedByUserId, string note, string geoJsonString)
         {
-            this.routeId = routeId;
-            this.name = name;
-            this.startDatetime = startDatetime;
-            this.endDatetime = endDatetime;
-            this.geojsonDocId = geojsonDocId;
-            this.reasonId = reasonId;
-            this.priorityId = priorityId;
-            this.statusId = statusId;
-            this.orgId = orgId;
-            this.createdByUserId = createdByUserId;
-            this.sentToUserId = sentToUserId;
-            this.approvedByUserId = approvedByUserId;
-            this.note = note;
-            this.geoJsonString = geoJsonString;
+            _routeId = routeId;
+            _name = name;
+            _startDatetime = startDatetime;
+            _endDatetime = endDatetime;
+            _geojsonDocId = geojsonDocId;
+            _reasonId = reasonId;
+            _priorityId = priorityId;
+            _statusId = statusId;
+            _orgId = orgId;
+            _createdByUserId = createdByUserId;
+            _sentToUserId = sentToUserId;
+            _approvedByUserId = approvedByUserId;
+            _note = note;
+            _geoJsonString = geoJsonString;
         }
 
         public Route RouteMaker(NpgsqlDataReader reader)
         {
-            RouteId = reader.GetInt32(0);
-            Name = reader.GetString(1);
-            StartDatetime = reader.GetDateTime(2);
-            EndDatetime = reader.GetDateTime(3);
-            GeojsonDocId = reader.GetInt32(4);
-            ReasonId = reader.GetInt32(5);
-            PriorityId = reader.GetInt32(6);
-            StatusId = reader.GetInt32(7);
-            OrgId = reader.GetInt32(8);
-            CreatedByUserId = reader.GetInt32(9);
-            SentToUserId = reader.GetInt32(10);
-            ApprovedByUserId = reader.GetInt32(11);
-            Note = reader.GetString(12);
-            GeoJsonString = reader.GetString(13);
-
-            return this;
+            Route route = new Route();
+            
+            route.RouteId = reader.GetInt32(0);
+            route.Name = reader.GetString(1);
+            route.StartDatetime = reader.GetDateTime(2);
+            route.EndDatetime = reader.GetDateTime(3);
+            route.GeojsonDocId = reader.GetInt32(4);
+            route.ReasonId = reader.GetInt32(5);
+            route.PriorityId = reader.GetInt32(6);
+            route.StatusId = reader.GetInt32(7);
+            route.OrgId = reader.GetInt32(8);
+            route.CreatedByUserId = reader.GetInt32(9);
+            route.SentToUserId = reader.GetInt32(10);
+            route.ApprovedByUserId = reader.GetInt32(11);
+            route.Note = reader.GetString(12);
+            route.GeoJsonString = reader.GetString(13);
+                
+            return route;
         }
 
         public int RouteId
         {
-            get => routeId;
-            set => routeId = value;
+            get => _routeId;
+            set => _routeId = value;
         }
 
         public string Name
         {
-            get => name;
-            set => name = value;
+            get => _name;
+            set => _name = value;
         }
 
         public DateTime StartDatetime
         {
-            get => startDatetime;
-            set => startDatetime = value;
+            get => _startDatetime;
+            set => _startDatetime = value;
         }
 
         public DateTime EndDatetime
         {
-            get => endDatetime;
-            set => endDatetime = value;
+            get => _endDatetime;
+            set => _endDatetime = value;
         }
 
         public int GeojsonDocId
         {
-            get => geojsonDocId;
-            set => geojsonDocId = value;
+            get => _geojsonDocId;
+            set => _geojsonDocId = value;
         }
 
         public int ReasonId
         {
-            get => reasonId;
-            set => reasonId = value;
+            get => _reasonId;
+            set => _reasonId = value;
         }
 
         public int PriorityId
         {
-            get => priorityId;
-            set => priorityId = value;
+            get => _priorityId;
+            set => _priorityId = value;
         }
 
         public int StatusId
         {
-            get => statusId;
-            set => statusId = value;
+            get => _statusId;
+            set => _statusId = value;
         }
 
         public int OrgId
         {
-            get => orgId;
-            set => orgId = value;
+            get => _orgId;
+            set => _orgId = value;
         }
 
         public int CreatedByUserId
         {
-            get => createdByUserId;
-            set => createdByUserId = value;
+            get => _createdByUserId;
+            set => _createdByUserId = value;
         }
 
         public int SentToUserId
         {
-            get => sentToUserId;
-            set => sentToUserId = value;
+            get => _sentToUserId;
+            set => _sentToUserId = value;
         }
 
         public int ApprovedByUserId
         {
-            get => approvedByUserId;
-            set => approvedByUserId = value;
+            get => _approvedByUserId;
+            set => _approvedByUserId = value;
         }
 
         public string Note
         {
-            get => note;
-            set => note = value;
+            get => _note;
+            set => _note = value;
         }
 
         public string GeoJsonString
         {
-            get => geoJsonString;
-            set => geoJsonString = value;
+            get => _geoJsonString;
+            set => _geoJsonString = value;
         }
     }
 }

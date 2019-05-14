@@ -8,22 +8,21 @@ namespace MatakDBConnector
     {
         private NpgsqlConnection connection = new NpgsqlConnection(ConfigParser.ConnString);
         public NpgsqlConnection Connection => connection;
+        protected NpgsqlCommand Command = new NpgsqlCommand();
+        public NpgsqlDataReader Reader = null;
         
         ~DbConnector()
         {
-            if (connection.State == ConnectionState.Open)
-            {
-                Disconnect();
-            }
-            Dispose();
+            Disconnect();
         }
         public void Connect()
         {   
             {
                 try
                 {
-                    connection.Open();
-                    if (connection.State == ConnectionState.Open)
+                    Connection.Open();
+                    Command.Connection = Connection;
+                    if (Connection.State == ConnectionState.Open)
                     {
                         Console.WriteLine("Successfully opened postgreSQL connection.");
                     }
@@ -45,8 +44,12 @@ namespace MatakDBConnector
             {
                 try
                 {
-                    connection.Close();
-                    Console.WriteLine("Connection closed.");
+                    if (Connection.State == ConnectionState.Open)
+                    {
+                        Connection.Close();
+                        Console.WriteLine("Connection closed.");   
+                        Dispose();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -58,7 +61,7 @@ namespace MatakDBConnector
 
         public void Dispose()
         {
-            connection?.Dispose();
+            Connection?.Dispose();
         }
     }
 }
