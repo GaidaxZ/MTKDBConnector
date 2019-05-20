@@ -1,3 +1,4 @@
+using System;
 using Npgsql;
 
 namespace MatakDBConnector
@@ -17,6 +18,14 @@ namespace MatakDBConnector
         {
             _orgId = orgId;
             _routeId = routeId;
+        }
+        
+        protected void newEscortOrgCommandHelper(EscortOrg escortOrg)
+        {
+            DbConnector.Command.Parameters.AddWithValue("org_id", escortOrg.OrgId);
+            DbConnector.Command.Parameters.AddWithValue("route_id", escortOrg.RouteId);
+            DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
+            DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
         }
 
         public EscortOrg EscortOrgMaker(NpgsqlDataReader reader)

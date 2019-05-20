@@ -7,24 +7,6 @@ namespace MatakDBConnector
 {
     public class RouteModel : Route
     {
-        private void newRouteCommandHelper(Route newRoute)
-        {
-            DbConnector.Command.Parameters.AddWithValue("name", newRoute.Name);
-            DbConnector.Command.Parameters.AddWithValue("start_datetime", newRoute.StartDatetime);
-            DbConnector.Command.Parameters.AddWithValue("end_datetime", newRoute.EndDatetime);
-            DbConnector.Command.Parameters.AddWithValue("geojson_doc_id", 0);
-            DbConnector.Command.Parameters.AddWithValue("reason_id", newRoute.ReasonId);
-            DbConnector.Command.Parameters.AddWithValue("priority_id", newRoute.PriorityId);
-            DbConnector.Command.Parameters.AddWithValue("status_id", newRoute.StatusId);
-            DbConnector.Command.Parameters.AddWithValue("org_id", newRoute.OrgId);
-            DbConnector.Command.Parameters.AddWithValue("created_by_user_id", newRoute.CreatedByUserId);
-            DbConnector.Command.Parameters.AddWithValue("sent_to_user_id", newRoute.SentToUserId);
-            DbConnector.Command.Parameters.AddWithValue("approved_by_user_id", 0);
-            DbConnector.Command.Parameters.AddWithValue("note", newRoute.Note);
-            DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
-            DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
-            DbConnector.Command.Parameters.AddWithValue("trip_area", newRoute.GeoJsonString);
-        }
         public int AddNewRoute(Route newRoute, out string errorMessage)
         {
             //TODO: change to store procedures
@@ -107,7 +89,7 @@ namespace MatakDBConnector
             }
         }
         
-        public Route GetRouteById(int RouteID, out string errorMessage)
+        public Route GetRouteById(int routeId, out string errorMessage)
         {
             errorMessage = null;
             
@@ -115,8 +97,8 @@ namespace MatakDBConnector
             {
                 DbConnector.Connect();
                 
-                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE route_id = (@p)";
-                DbConnector.Command.Parameters.AddWithValue("p", RouteID);
+                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE route_id = (@routeId)";
+                DbConnector.Command.Parameters.AddWithValue("routeId", routeId);
                 DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
                 while (DbConnector.Reader.Read())
@@ -138,7 +120,7 @@ namespace MatakDBConnector
             }
         }
         
-        public int GetRoutesCountByOrgId(int OrgId, out string errorMessage)
+        public int GetRoutesCountByOrgId(int orgId, out string errorMessage)
         {   
             errorMessage = null;
             var count = -1;
@@ -147,8 +129,8 @@ namespace MatakDBConnector
             {
                 DbConnector.Connect();
                 
-                DbConnector.Command.CommandText = "SELECT count(*) FROM route WHERE org_id = (@p)";
-                DbConnector.Command.Parameters.AddWithValue("p", OrgId);
+                DbConnector.Command.CommandText = "SELECT count(*) FROM route WHERE org_id = (@orgId)";
+                DbConnector.Command.Parameters.AddWithValue("orgId", orgId);
                 DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
                 while (DbConnector.Reader.Read())
@@ -210,8 +192,8 @@ namespace MatakDBConnector
             {
                 DbConnector.Connect();
                 
-                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE org_id = (@p)";
-                DbConnector.Command.Parameters.AddWithValue("p", orgId);
+                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE org_id = (@orgId)";
+                DbConnector.Command.Parameters.AddWithValue("orgId", orgId);
                 DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
                 while (DbConnector.Reader.Read())
@@ -244,8 +226,8 @@ namespace MatakDBConnector
             {
                 DbConnector.Connect();
 
-                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE created_by_user_id = (@p)";
-                DbConnector.Command.Parameters.AddWithValue("p", createdByUserId);
+                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE created_by_user_id = (@createdByUserId)";
+                DbConnector.Command.Parameters.AddWithValue("createdByUserId", createdByUserId);
                 DbConnector.Reader = DbConnector.Command.ExecuteReader();
                 
                 while (DbConnector.Reader.Read())

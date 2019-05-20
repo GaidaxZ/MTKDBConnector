@@ -7,6 +7,7 @@ namespace MatakDBConnector
     public class Route
     {
         //TODO add created and updated dates 
+        //TODO newRouteCommandHelper should differentiate between updated and new route for created timestamp
         private int _routeId;
         private string _name;
         private DateTime _startDatetime;
@@ -78,6 +79,25 @@ namespace MatakDBConnector
             GeoJsonString = reader.GetString(13);
                 
             return this;
+        }
+        
+        protected void newRouteCommandHelper(Route route)
+        {
+            DbConnector.Command.Parameters.AddWithValue("name", route.Name);
+            DbConnector.Command.Parameters.AddWithValue("start_datetime", route.StartDatetime);
+            DbConnector.Command.Parameters.AddWithValue("end_datetime", route.EndDatetime);
+            DbConnector.Command.Parameters.AddWithValue("geojson_doc_id", 0);
+            DbConnector.Command.Parameters.AddWithValue("reason_id", route.ReasonId);
+            DbConnector.Command.Parameters.AddWithValue("priority_id", route.PriorityId);
+            DbConnector.Command.Parameters.AddWithValue("status_id", route.StatusId);
+            DbConnector.Command.Parameters.AddWithValue("org_id", route.OrgId);
+            DbConnector.Command.Parameters.AddWithValue("created_by_user_id", route.CreatedByUserId);
+            DbConnector.Command.Parameters.AddWithValue("sent_to_user_id", route.SentToUserId);
+            DbConnector.Command.Parameters.AddWithValue("approved_by_user_id", 0);
+            DbConnector.Command.Parameters.AddWithValue("note", route.Note);
+            DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
+            DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
+            DbConnector.Command.Parameters.AddWithValue("trip_area", route.GeoJsonString);
         }
 
         public int RouteId

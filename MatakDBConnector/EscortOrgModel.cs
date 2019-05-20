@@ -5,13 +5,6 @@ namespace MatakDBConnector
 {
     public class EscortOrgModel : EscortOrg
     {
-        private void newEscortOrgCommandHelper(EscortOrg escortOrg)
-        {
-            DbConnector.Command.Parameters.AddWithValue("org_id", escortOrg.OrgId);
-            DbConnector.Command.Parameters.AddWithValue("route_id", escortOrg.RouteId);
-            DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
-            DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
-        }
         public void AddNewEscortOrg(EscortOrg escortOrg, out string errorMessage)
         {
             errorMessage = null;
