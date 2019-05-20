@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class OrganizationController : DbConnector
+    public class OrganizationModel : Organization
     {
         public List<Organization> getAllOrganizations(out string errorMessage)
         {
@@ -13,15 +13,15 @@ namespace MatakDBConnector
 
             try
             {
-                Connect();
+                DbConnector.Connect();
                 
-                Command.CommandText = "SELECT * FROM organization";
-                Reader = Command.ExecuteReader();
+                DbConnector.Command.CommandText = "SELECT * FROM organization";
+                DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
-                while (Reader.Read())
+                while (DbConnector.Reader.Read())
                 {
                     Organization organization = new Organization();
-                    allOrganizations.Add(organization.OrganizationMaker(Reader));
+                    allOrganizations.Add(organization.OrganizationMaker(DbConnector.Reader));
                 }
 
                 return allOrganizations;
@@ -34,28 +34,25 @@ namespace MatakDBConnector
             }
             finally
             {
-                Disconnect();
+                DbConnector.Disconnect();
             }
         }
         
-        public Organization getOrganizationById(int org_id, out string errorMessage)
+        public Organization getOrganizationById(int orgid, out string errorMessage)
         {
-            List<Organization> allOrganizations = new List<Organization>();
             errorMessage = null;
 
             try
             {
-                Connect();
+                DbConnector.Connect();
                 
-                Command.CommandText = "SELECT * FROM organization WHERE org_id = (@p)";
-                Command.Parameters.AddWithValue("p", org_id);
-                Reader = Command.ExecuteReader();
+                DbConnector.Command.CommandText = "SELECT * FROM organization WHERE org_id = (@p)";
+                DbConnector.Command.Parameters.AddWithValue("p", orgid);
+                DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
-                while (Reader.Read())
+                while (DbConnector.Reader.Read())
                 {
-                    Organization organization = new Organization();
-                    organization.OrganizationMaker(Reader);
-                    return organization;
+                    return OrganizationMaker(DbConnector.Reader);;
                 }
 
                 return null;
@@ -68,7 +65,7 @@ namespace MatakDBConnector
             }
             finally
             {
-                Disconnect();
+                DbConnector.Disconnect();
             }
         }
     }

@@ -36,17 +36,15 @@ namespace MatakDBConnector
         
         public Organization OrganizationMaker(NpgsqlDataReader reader)
         {
-            Organization organization = new Organization();
-            
-            organization.OrgId = reader.GetInt32(0);
-            organization.Name = reader.GetString(1);
-            organization.MainUserId = reader.GetInt32(2);
-            organization.CountryId = reader.GetInt32(3);
-            organization.AddressId = reader.GetInt32(4);
-            organization.FaxId = reader.GetInt32(5);
-            organization.PhoneId = reader.GetInt32(8);
+            OrgId = reader.GetInt32(0);
+            Name = reader.GetString(1);
+            MainUserId = reader.GetInt32(2);
+            CountryId = reader.GetInt32(3);
+            AddressId = reader.GetInt32(4);
+            FaxId = reader.GetInt32(5);
+            PhoneId = reader.GetInt32(8);
                 
-            return organization;
+            return this;
         }
 
         public int OrgId

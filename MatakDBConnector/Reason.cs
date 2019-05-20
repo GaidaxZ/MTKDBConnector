@@ -22,12 +22,10 @@ namespace MatakDBConnector
         
         public Reason ReasonMaker(NpgsqlDataReader reader)
         {
-            Reason reason = new Reason();
-            
-            reason.ReasonId = reader.GetInt32(0);
-            reason.Description = reader.GetString(1);
+            ReasonId = reader.GetInt32(0);
+            Description = reader.GetString(1);
                 
-            return reason;
+            return this;
         }
 
         public int ReasonId

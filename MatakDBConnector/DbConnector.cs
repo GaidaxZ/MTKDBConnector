@@ -4,18 +4,15 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class DbConnector : IDisposable
+    public static class DbConnector
     {
-        private NpgsqlConnection connection = new NpgsqlConnection(ConfigParser.ConnString);
-        public NpgsqlConnection Connection => connection;
-        protected NpgsqlCommand Command = new NpgsqlCommand();
-        public NpgsqlDataReader Reader = null;
+        private static NpgsqlConnection connection = new NpgsqlConnection(ConfigParser.ConnString);
+        public static NpgsqlConnection Connection => connection;
+        public static NpgsqlCommand Command = new NpgsqlCommand();
+        public static NpgsqlDataReader Reader = null;
         
-        ~DbConnector()
-        {
-            Disconnect();
-        }
-        public void Connect()
+
+        public static void Connect()
         {   
             {
                 try
@@ -39,7 +36,7 @@ namespace MatakDBConnector
             }
         }
 
-        public void Disconnect()
+        public static void Disconnect()
         {
             {
                 try
@@ -47,8 +44,7 @@ namespace MatakDBConnector
                     if (Connection.State == ConnectionState.Open)
                     {
                         Connection.Close();
-                        Console.WriteLine("Connection closed.");   
-                        Dispose();
+                        Console.WriteLine("Connection closed."); 
                     }
                 }
                 catch (Exception e)
@@ -59,7 +55,7 @@ namespace MatakDBConnector
             }
         }
 
-        public void Dispose()
+        public static void Dispose()
         {
             Connection?.Dispose();
         }

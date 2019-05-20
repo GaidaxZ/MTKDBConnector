@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MatakDBConnector
 {
-    public class ReasonController : DbConnector
+    public class ReasonModel : Reason
     {
         public List<Reason> GetAllReasons(out string errorMessage)
         {
@@ -12,15 +12,15 @@ namespace MatakDBConnector
 
             try
             {
-                Connect();
+                DbConnector.Connect();
 
-                Command.CommandText = "SELECT * FROM reason";
-                Reader = Command.ExecuteReader();
+                DbConnector.Command.CommandText = "SELECT * FROM reason";
+                DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
-                while (Reader.Read())
+                while (DbConnector.Reader.Read())
                 {
                     Reason reason = new Reason();
-                    allReasons.Add(reason.ReasonMaker(Reader));
+                    allReasons.Add(reason.ReasonMaker(DbConnector.Reader));
                 }
 
                 return allReasons;
@@ -33,7 +33,7 @@ namespace MatakDBConnector
             }
             finally
             {
-                Disconnect();
+                DbConnector.Disconnect();
             }
         }
     }

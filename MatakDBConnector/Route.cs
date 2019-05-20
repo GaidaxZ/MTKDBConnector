@@ -62,24 +62,22 @@ namespace MatakDBConnector
 
         public Route RouteMaker(NpgsqlDataReader reader)
         {
-            Route route = new Route();
-            
-            route.RouteId = reader.GetInt32(0);
-            route.Name = reader.GetString(1);
-            route.StartDatetime = reader.GetDateTime(2);
-            route.EndDatetime = reader.GetDateTime(3);
-            route.GeojsonDocId = reader.GetInt32(4);
-            route.ReasonId = reader.GetInt32(5);
-            route.PriorityId = reader.GetInt32(6);
-            route.StatusId = reader.GetInt32(7);
-            route.OrgId = reader.GetInt32(8);
-            route.CreatedByUserId = reader.GetInt32(9);
-            route.SentToUserId = reader.GetInt32(10);
-            route.ApprovedByUserId = reader.GetInt32(11);
-            route.Note = reader.GetString(12);
-            route.GeoJsonString = reader.GetString(13);
+            RouteId = reader.GetInt32(0);
+            Name = reader.GetString(1);
+            StartDatetime = reader.GetDateTime(2);
+            EndDatetime = reader.GetDateTime(3);
+            GeojsonDocId = reader.GetInt32(4);
+            ReasonId = reader.GetInt32(5);
+            PriorityId = reader.GetInt32(6);
+            StatusId = reader.GetInt32(7);
+            OrgId = reader.GetInt32(8);
+            CreatedByUserId = reader.GetInt32(9);
+            SentToUserId = reader.GetInt32(10);
+            ApprovedByUserId = reader.GetInt32(11);
+            Note = reader.GetString(12);
+            GeoJsonString = reader.GetString(13);
                 
-            return route;
+            return this;
         }
 
         public int RouteId

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MatakDBConnector
 {
-    public class UserController : DbConnector
+    public class UserModel : User
     {
         public List<User> getAllUsers(out string errorMessage)
         {
@@ -12,15 +12,15 @@ namespace MatakDBConnector
 
             try
             {
-                Connect();
+                DbConnector.Connect();
 
-                Command.CommandText = "SELECT * FROM playground.public.user";
-                Reader = Command.ExecuteReader();
+                DbConnector.Command.CommandText = "SELECT * FROM playground.public.user";
+                DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
-                while (Reader.Read())
+                while (DbConnector.Reader.Read())
                 {
                     User user = new User();
-                    allUsers.Add(user.UserMaker(Reader));
+                    allUsers.Add(user.UserMaker(DbConnector.Reader));
                 }
 
                 return allUsers;
@@ -33,7 +33,7 @@ namespace MatakDBConnector
             }
             finally
             {
-                Disconnect();
+                DbConnector.Disconnect();
             }
         }
         
@@ -44,16 +44,16 @@ namespace MatakDBConnector
 
             try
             {
-                Connect();
+                DbConnector.Connect();
 
-                Command.CommandText = "SELECT * FROM playground.public.user WHERE org_id = (@p)";
-                Command.Parameters.AddWithValue("p", orgId);
-                Reader = Command.ExecuteReader();
+                DbConnector.Command.CommandText = "SELECT * FROM playground.public.user WHERE org_id = (@p)";
+                DbConnector.Command.Parameters.AddWithValue("p", orgId);
+                DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
-                while (Reader.Read())
+                while (DbConnector.Reader.Read())
                 {
                     User user = new User();
-                    allUsers.Add(user.UserMaker(Reader));
+                    allUsers.Add(user.UserMaker(DbConnector.Reader));
                 }
 
                 return allUsers;
@@ -66,7 +66,7 @@ namespace MatakDBConnector
             }
             finally
             {
-                Disconnect();
+                DbConnector.Disconnect();
             }
         }
     }

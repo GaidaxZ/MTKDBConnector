@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class StatusController : DbConnector
+    public class StatusModel : Status
     {
         public List<Status> getAllStati(out string errorMessage)
         {
@@ -13,15 +13,15 @@ namespace MatakDBConnector
 
             try
             {
-                Connect();
+                DbConnector.Connect();
 
-                Command.CommandText = "SELECT * FROM status";
-                Reader = Command.ExecuteReader();
+                DbConnector.Command.CommandText = "SELECT * FROM status";
+                DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
-                while (Reader.Read())
+                while (DbConnector.Reader.Read())
                 {
                     Status status = new Status();
-                    allStati.Add(status.StatusMaker(Reader));
+                    allStati.Add(status.StatusMaker(DbConnector.Reader));
                 }
 
                 return allStati;
@@ -34,7 +34,7 @@ namespace MatakDBConnector
             }
             finally
             {
-                Disconnect();
+                DbConnector.Disconnect();
             }
         }
     }
