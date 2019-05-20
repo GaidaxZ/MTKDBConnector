@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MatakDBConnector
 {
-    public static class ConfigParser
+    internal static class ConfigParser
     {
 
         static Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"DbConfig.json"));

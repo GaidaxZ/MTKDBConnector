@@ -1,6 +1,6 @@
 namespace MatakDBConnector
 {
-    public class Config
+    internal class Config
     {
         private string host = null;
         private string username = null;

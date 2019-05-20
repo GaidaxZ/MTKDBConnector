@@ -4,8 +4,8 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public static class DbConnector
-    {
+    internal static class DbConnector
+    {     
         private static NpgsqlConnection connection = new NpgsqlConnection(ConfigParser.ConnString);
         public static NpgsqlConnection Connection => connection;
         public static NpgsqlCommand Command = new NpgsqlCommand();
