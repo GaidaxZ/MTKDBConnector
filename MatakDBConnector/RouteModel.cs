@@ -7,9 +7,26 @@ namespace MatakDBConnector
 {
     public class RouteModel : Route
     {
+        private void newRouteCommandHelper(Route newRoute)
+        {
+            DbConnector.Command.Parameters.AddWithValue("name", newRoute.Name);
+            DbConnector.Command.Parameters.AddWithValue("start_datetime", newRoute.StartDatetime);
+            DbConnector.Command.Parameters.AddWithValue("end_datetime", newRoute.EndDatetime);
+            DbConnector.Command.Parameters.AddWithValue("geojson_doc_id", 0);
+            DbConnector.Command.Parameters.AddWithValue("reason_id", newRoute.ReasonId);
+            DbConnector.Command.Parameters.AddWithValue("priority_id", newRoute.PriorityId);
+            DbConnector.Command.Parameters.AddWithValue("status_id", newRoute.StatusId);
+            DbConnector.Command.Parameters.AddWithValue("org_id", newRoute.OrgId);
+            DbConnector.Command.Parameters.AddWithValue("created_by_user_id", newRoute.CreatedByUserId);
+            DbConnector.Command.Parameters.AddWithValue("sent_to_user_id", newRoute.SentToUserId);
+            DbConnector.Command.Parameters.AddWithValue("approved_by_user_id", 0);
+            DbConnector.Command.Parameters.AddWithValue("note", newRoute.Note);
+            DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
+            DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
+            DbConnector.Command.Parameters.AddWithValue("trip_area", newRoute.GeoJsonString);
+        }
         public int AddNewRoute(Route newRoute, out string errorMessage)
         {
-            //TODO: consider improving this method by using inheritance properties
             //TODO: change to store procedures
             errorMessage = null;
             
@@ -19,21 +36,7 @@ namespace MatakDBConnector
                 
                 DbConnector.Command.CommandText =
                     "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area)) RETURNING route_id";
-                DbConnector.Command.Parameters.AddWithValue("name", newRoute.Name);
-                DbConnector.Command.Parameters.AddWithValue("start_datetime", newRoute.StartDatetime);
-                DbConnector.Command.Parameters.AddWithValue("end_datetime", newRoute.EndDatetime);
-                DbConnector.Command.Parameters.AddWithValue("geojson_doc_id", 0);
-                DbConnector.Command.Parameters.AddWithValue("reason_id", newRoute.ReasonId);
-                DbConnector.Command.Parameters.AddWithValue("priority_id", newRoute.PriorityId);
-                DbConnector.Command.Parameters.AddWithValue("status_id", newRoute.StatusId);
-                DbConnector.Command.Parameters.AddWithValue("org_id", newRoute.OrgId);
-                DbConnector.Command.Parameters.AddWithValue("created_by_user_id", newRoute.CreatedByUserId);
-                DbConnector.Command.Parameters.AddWithValue("sent_to_user_id", newRoute.SentToUserId);
-                DbConnector.Command.Parameters.AddWithValue("approved_by_user_id", 0);
-                DbConnector.Command.Parameters.AddWithValue("note", newRoute.Note);
-                DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
-                DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
-                DbConnector.Command.Parameters.AddWithValue("trip_area", newRoute.GeoJsonString);
+                newRouteCommandHelper(newRoute);
 
                 return Convert.ToInt32(DbConnector.Command.ExecuteScalar());
             }
@@ -52,6 +55,8 @@ namespace MatakDBConnector
         public int AddNewRoute(string name, DateTime startDateTime, DateTime endDateTime, int reasonId,
             int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId, string note, string geoJsonString, out string errorMessage)
         {
+            Route newRoute = new Route(0, name, startDateTime, endDateTime, GeojsonDocId, reasonId, priorityId, 
+                statusId, orgId, createdByUserId, sentToUserId, 0, note, geoJsonString );
             errorMessage = null;
 
             try
@@ -60,21 +65,7 @@ namespace MatakDBConnector
 
                 DbConnector.Command.CommandText =
                     "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area)) RETURNING route_id";
-                DbConnector.Command.Parameters.AddWithValue("name", name);
-                DbConnector.Command.Parameters.AddWithValue("start_datetime", startDateTime);
-                DbConnector.Command.Parameters.AddWithValue("end_datetime", endDateTime);
-                DbConnector.Command.Parameters.AddWithValue("geojson_doc_id", 0);
-                DbConnector.Command.Parameters.AddWithValue("reason_id", reasonId);
-                DbConnector.Command.Parameters.AddWithValue("priority_id", priorityId);
-                DbConnector.Command.Parameters.AddWithValue("status_id", statusId);
-                DbConnector.Command.Parameters.AddWithValue("org_id", orgId);
-                DbConnector.Command.Parameters.AddWithValue("created_by_user_id", createdByUserId);
-                DbConnector.Command.Parameters.AddWithValue("sent_to_user_id", sentToUserId);
-                DbConnector.Command.Parameters.AddWithValue("approved_by_user_id", 0);
-                DbConnector.Command.Parameters.AddWithValue("note", note);
-                DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
-                DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
-                DbConnector.Command.Parameters.AddWithValue("trip_area", geoJsonString);
+                newRouteCommandHelper(newRoute);
 
                 return Convert.ToInt32(DbConnector.Command.ExecuteScalar());
             }
@@ -98,23 +89,9 @@ namespace MatakDBConnector
             {
                 DbConnector.Connect();
                 
-                DbConnector.Command.CommandText = "UPDATE route SET name = (@name), start_datetime = (@start_datetime), end_datetime = (@end_datetime), geojson_doc_id = (@geojson_doc_id), reason_id = (@reason_id), priority_id = (@priority_id), status_id = (@status_id), org_id = (@org_id), created_by_user_id = (@created_by_user_id), sent_to_user_id = (@sent_to_user_id), approved_by_user_id = (@approved_by_user_id), note = (@note), created = (@created), updated = (@updated), trip_area = st_geomfromgeojson(@trip_area) WHERE route_id = (@p) RETURNING route_id";
-                DbConnector.Command.Parameters.AddWithValue("name", newRoute.Name);
-                DbConnector.Command.Parameters.AddWithValue("start_datetime", newRoute.StartDatetime);
-                DbConnector.Command.Parameters.AddWithValue("end_datetime", newRoute.EndDatetime);
-                DbConnector.Command.Parameters.AddWithValue("geojson_doc_id", 0);
-                DbConnector.Command.Parameters.AddWithValue("reason_id", newRoute.ReasonId);
-                DbConnector.Command.Parameters.AddWithValue("priority_id", newRoute.PriorityId);
-                DbConnector.Command.Parameters.AddWithValue("status_id", newRoute.StatusId);
-                DbConnector.Command.Parameters.AddWithValue("org_id", newRoute.OrgId);
-                DbConnector.Command.Parameters.AddWithValue("created_by_user_id", newRoute.CreatedByUserId);
-                DbConnector.Command.Parameters.AddWithValue("sent_to_user_id", newRoute.SentToUserId);
-                DbConnector.Command.Parameters.AddWithValue("approved_by_user_id", 0);
-                DbConnector.Command.Parameters.AddWithValue("note", newRoute.Note);
-                DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
-                DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
-                DbConnector.Command.Parameters.AddWithValue("trip_area", newRoute.GeoJsonString);
-                DbConnector.Command.Parameters.AddWithValue("p", routeId);
+                DbConnector.Command.CommandText = "UPDATE route SET name = (@name), start_datetime = (@start_datetime), end_datetime = (@end_datetime), geojson_doc_id = (@geojson_doc_id), reason_id = (@reason_id), priority_id = (@priority_id), status_id = (@status_id), org_id = (@org_id), created_by_user_id = (@created_by_user_id), sent_to_user_id = (@sent_to_user_id), approved_by_user_id = (@approved_by_user_id), note = (@note), created = (@created), updated = (@updated), trip_area = st_geomfromgeojson(@trip_area) WHERE route_id = (@routeId) RETURNING route_id";
+                DbConnector.Command.Parameters.AddWithValue("routeId", routeId);
+                newRouteCommandHelper(newRoute);
 
                 return Convert.ToInt32(DbConnector.Command.ExecuteScalar());
             }
