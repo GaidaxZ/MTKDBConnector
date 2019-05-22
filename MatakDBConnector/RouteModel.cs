@@ -34,46 +34,23 @@ namespace MatakDBConnector
             }
         }
 
-        public int AddNewRoute(string name, DateTime startDateTime, DateTime endDateTime, int reasonId,
-            int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId, string note, string geoJsonString, out string errorMessage)
-        {
-            Route newRoute = new Route(0, name, startDateTime, endDateTime, GeojsonDocId, reasonId, priorityId, 
-                statusId, orgId, createdByUserId, sentToUserId, 0, note, geoJsonString );
-            errorMessage = null;
-
-            try
-            {
-                DbConnector.Connect();
-
-                DbConnector.Command.CommandText =
-                    "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area)) RETURNING route_id";
-                newRouteCommandHelper(newRoute);
-
-                return Convert.ToInt32(DbConnector.Command.ExecuteScalar());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
-            }
-        }
-        
-        public int UpdateRouteId(Route newRoute, int routeId, out string errorMessage)
+        public int UpdateRouteId(Route route, out string errorMessage)
         {
             errorMessage = null;
+
+            if (route.RouteId == 0)
+            {
+                errorMessage = "Invalid route ID (0)";
+                return -1;               
+            }
             
             try
             {
                 DbConnector.Connect();
                 
                 DbConnector.Command.CommandText = "UPDATE route SET name = (@name), start_datetime = (@start_datetime), end_datetime = (@end_datetime), geojson_doc_id = (@geojson_doc_id), reason_id = (@reason_id), priority_id = (@priority_id), status_id = (@status_id), org_id = (@org_id), created_by_user_id = (@created_by_user_id), sent_to_user_id = (@sent_to_user_id), approved_by_user_id = (@approved_by_user_id), note = (@note), created = (@created), updated = (@updated), trip_area = st_geomfromgeojson(@trip_area) WHERE route_id = (@routeId) RETURNING route_id";
-                DbConnector.Command.Parameters.AddWithValue("routeId", routeId);
-                newRouteCommandHelper(newRoute);
+                DbConnector.Command.Parameters.AddWithValue("routeId", route.RouteId);
+                newRouteCommandHelper(route);
 
                 return Convert.ToInt32(DbConnector.Command.ExecuteScalar());
             }

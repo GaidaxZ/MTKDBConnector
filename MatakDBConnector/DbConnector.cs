@@ -6,26 +6,26 @@ namespace MatakDBConnector
 {
     internal static class DbConnector
     {     
-        private static NpgsqlConnection connection = new NpgsqlConnection(ConfigParser.ConnString);
-        public static NpgsqlConnection Connection => connection;
-        public static NpgsqlCommand Command = new NpgsqlCommand();
-        public static NpgsqlDataReader Reader = null;
+        private static readonly NpgsqlConnection Connection = new NpgsqlConnection(ConfigParser.ConnString);
+        internal static NpgsqlCommand Command;
+        internal static NpgsqlDataReader Reader;
         
 
-        public static void Connect()
+        internal static void Connect()
         {   
             {
                 try
                 {
                     Connection.Open();
+                    Command = new NpgsqlCommand();
                     Command.Connection = Connection;
                     if (Connection.State == ConnectionState.Open)
                     {
-                        Console.WriteLine("Successfully opened postgreSQL connection.");
+                        Console.WriteLine("Successfully opened postgreSQL Connection.");
                     }
                     else
                     {
-                        Console.WriteLine("Failed to open postgreSQL connection.");
+                        Console.WriteLine("Failed to open postgreSQL Connection.");
                     }
                 }
                 catch (Exception e)
@@ -36,7 +36,7 @@ namespace MatakDBConnector
             }
         }
 
-        public static void Disconnect()
+        internal static void Disconnect()
         {
             {
                 try
@@ -46,6 +46,8 @@ namespace MatakDBConnector
                         Connection.Close();
                         Console.WriteLine("Connection closed."); 
                     }
+                    Reader = null;
+                    Command = null;
                 }
                 catch (Exception e)
                 {
@@ -55,7 +57,7 @@ namespace MatakDBConnector
             }
         }
 
-        public static void Dispose()
+        internal static void Dispose()
         {
             Connection?.Dispose();
         }
