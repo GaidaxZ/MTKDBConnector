@@ -11,30 +11,32 @@ namespace MatakDBConnector
             List<Vehicle> allVehicles = new List<Vehicle>();
             errorMessage = null;
 
-            try
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-
-                DbConnector.Command.CommandText = "SELECT * FROM vehicle";
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    Vehicle vehicle = new Vehicle();
-                    allVehicles.Add(vehicle.VehicleMaker(DbConnector.Reader));
-                }
+                    connection.Open();
 
-                return allVehicles;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM vehicle";
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Vehicle vehicle = new Vehicle();
+                        allVehicles.Add(vehicle.VehicleMaker(reader));
+                    }
+
+                    return allVehicles;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
     }

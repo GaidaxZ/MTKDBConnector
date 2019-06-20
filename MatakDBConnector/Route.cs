@@ -81,23 +81,23 @@ namespace MatakDBConnector
             return this;
         }
         
-        protected void newRouteCommandHelper(Route route)
+        protected void newRouteCommandHelper(Route route, NpgsqlCommand command)
         {
-            DbConnector.Command.Parameters.AddWithValue("name", route.Name);
-            DbConnector.Command.Parameters.AddWithValue("start_datetime", route.StartDatetime);
-            DbConnector.Command.Parameters.AddWithValue("end_datetime", route.EndDatetime);
-            DbConnector.Command.Parameters.AddWithValue("geojson_doc_id", 0);
-            DbConnector.Command.Parameters.AddWithValue("reason_id", route.ReasonId);
-            DbConnector.Command.Parameters.AddWithValue("priority_id", route.PriorityId);
-            DbConnector.Command.Parameters.AddWithValue("status_id", route.StatusId);
-            DbConnector.Command.Parameters.AddWithValue("org_id", route.OrgId);
-            DbConnector.Command.Parameters.AddWithValue("created_by_user_id", route.CreatedByUserId);
-            DbConnector.Command.Parameters.AddWithValue("sent_to_user_id", route.SentToUserId);
-            DbConnector.Command.Parameters.AddWithValue("approved_by_user_id", 0);
-            DbConnector.Command.Parameters.AddWithValue("note", route.Note);
-            DbConnector.Command.Parameters.AddWithValue("created", DateTime.Now);
-            DbConnector.Command.Parameters.AddWithValue("updated", DateTime.Now);
-            DbConnector.Command.Parameters.AddWithValue("trip_area", route.GeoJsonString);
+            command.Parameters.AddWithValue("name", route.Name);
+            command.Parameters.AddWithValue("start_datetime", route.StartDatetime);
+            command.Parameters.AddWithValue("end_datetime", route.EndDatetime);
+            command.Parameters.AddWithValue("geojson_doc_id", 0);
+            command.Parameters.AddWithValue("reason_id", route.ReasonId);
+            command.Parameters.AddWithValue("priority_id", route.PriorityId);
+            command.Parameters.AddWithValue("status_id", route.StatusId);
+            command.Parameters.AddWithValue("org_id", route.OrgId);
+            command.Parameters.AddWithValue("created_by_user_id", route.CreatedByUserId);
+            command.Parameters.AddWithValue("sent_to_user_id", route.SentToUserId);
+            command.Parameters.AddWithValue("approved_by_user_id", 0);
+            command.Parameters.AddWithValue("note", route.Note);
+            command.Parameters.AddWithValue("created", DateTime.Now);
+            command.Parameters.AddWithValue("updated", DateTime.Now);
+            command.Parameters.AddWithValue("trip_area", route.GeoJsonString);
         }
 
         public int RouteId

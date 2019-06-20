@@ -11,30 +11,32 @@ namespace MatakDBConnector
             List<Organization> allOrganizations = new List<Organization>();
             errorMessage = null;
 
-            try
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText = "SELECT * FROM organization";
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    Organization organization = new Organization();
-                    allOrganizations.Add(organization.OrganizationMaker(DbConnector.Reader));
-                }
+                    connection.Open();
 
-                return allOrganizations;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    command.CommandText = "SELECT * FROM organization";
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Organization organization = new Organization();
+                        allOrganizations.Add(organization.OrganizationMaker(reader));
+                    }
+
+                    return allOrganizations;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
         
@@ -42,30 +44,32 @@ namespace MatakDBConnector
         {
             errorMessage = null;
 
-            try
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText = "SELECT * FROM organization WHERE org_id = (@p)";
-                DbConnector.Command.Parameters.AddWithValue("p", orgid);
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    return OrganizationMaker(DbConnector.Reader);;
-                }
+                    connection.Open();
 
-                return null;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM organization WHERE org_id = (@p)";
+                    command.Parameters.AddWithValue("p", orgid);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        return OrganizationMaker(reader);;
+                    }
+
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
     }

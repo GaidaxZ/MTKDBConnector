@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Npgsql;
 
 namespace MatakDBConnector
 {
@@ -8,26 +9,28 @@ namespace MatakDBConnector
         public void AddNewEscortOrg(EscortOrg escortOrg, out string errorMessage)
         {
             errorMessage = null;
-            
-            try
-            {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText =
-                    "INSERT INTO escort_org (org_id, route_id, created, updated) VALUES (@org_id, @route_id, @created, @updated)";
-                newEscortOrgCommandHelper(escortOrg);
 
-                DbConnector.Command.ExecuteNonQuery();
-            }
-            catch (Exception e)
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText =
+                        "INSERT INTO escort_org (org_id, route_id, created, updated) VALUES (@org_id, @route_id, @created, @updated)";
+                    newEscortOrgCommandHelper(escortOrg, command);
+
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
         public List<EscortOrg> GetAllEscortOrgs(out string errorMessage)
@@ -35,30 +38,32 @@ namespace MatakDBConnector
             List<EscortOrg> allEscortOrgs = new List<EscortOrg>();
             errorMessage = null;
 
-            try
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText = "SELECT * FROM escort_org";
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    EscortOrg escortOrg = new EscortOrg();
-                    allEscortOrgs.Add(escortOrg.EscortOrgMaker(DbConnector.Reader));
-                }
+                    connection.Open();
 
-                return allEscortOrgs;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM escort_org";
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        EscortOrg escortOrg = new EscortOrg();
+                        allEscortOrgs.Add(escortOrg.EscortOrgMaker(reader));
+                    }
+
+                    return allEscortOrgs;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
         
@@ -67,31 +72,33 @@ namespace MatakDBConnector
             List<EscortOrg> allEscortOrgs = new List<EscortOrg>();
             errorMessage = null;
 
-            try
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText = "SELECT * FROM organization WHERE route_id = (@p)";
-                DbConnector.Command.Parameters.AddWithValue("p", routeId);
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    EscortOrg escortOrg = new EscortOrg();
-                    allEscortOrgs.Add(escortOrg.EscortOrgMaker(DbConnector.Reader));
-                }
+                    connection.Open();
 
-                return allEscortOrgs;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM organization WHERE route_id = (@p)";
+                    command.Parameters.AddWithValue("p", routeId);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        EscortOrg escortOrg = new EscortOrg();
+                        allEscortOrgs.Add(escortOrg.EscortOrgMaker(reader));
+                    }
+
+                    return allEscortOrgs;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
     }

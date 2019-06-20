@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Npgsql;
 
 namespace MatakDBConnector
 {
@@ -10,30 +11,32 @@ namespace MatakDBConnector
             List<Reason> allReasons = new List<Reason>();
             errorMessage = null;
 
-            try
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-
-                DbConnector.Command.CommandText = "SELECT * FROM reason";
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    Reason reason = new Reason();
-                    allReasons.Add(reason.ReasonMaker(DbConnector.Reader));
-                }
+                    connection.Open();
 
-                return allReasons;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM reason";
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Reason reason = new Reason();
+                        allReasons.Add(reason.ReasonMaker(reader));
+                    }
+
+                    return allReasons;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
     }

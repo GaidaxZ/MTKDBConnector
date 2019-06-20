@@ -13,3 +13,4 @@ MatakDBConnector/DbConfig.json
 MatakDBConnector/bin/.DS_Store
 MatakDBConnector/bin/Debug/.DS_Store
 DbConfig.json
+/MatakDBConnector/CryptoEngine.cs

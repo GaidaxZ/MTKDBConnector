@@ -11,30 +11,32 @@ namespace MatakDBConnector
             List<Status> allStati = new List<Status>();
             errorMessage = null;
 
-            try
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-
-                DbConnector.Command.CommandText = "SELECT * FROM status";
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    Status status = new Status();
-                    allStati.Add(status.StatusMaker(DbConnector.Reader));
-                }
+                    connection.Open();
 
-                return allStati;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM status";
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Status status = new Status();
+                        allStati.Add(status.StatusMaker(reader));
+                    }
+
+                    return allStati;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks.Sources;
 using Npgsql;
 
 namespace MatakDBConnector
@@ -9,28 +10,30 @@ namespace MatakDBConnector
     {
         public int AddNewRoute(Route newRoute, out string errorMessage)
         {
-            //TODO: change to store procedures
+            //TODO: change to stored procedures
             errorMessage = null;
-            
-            try
-            {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText =
-                    "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area)) RETURNING route_id";
-                newRouteCommandHelper(newRoute);
 
-                return Convert.ToInt32(DbConnector.Command.ExecuteScalar());
-            }
-            catch (Exception e)
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;                                     
+                
+                    command.CommandText =
+                        "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area)) RETURNING route_id";
+                    newRouteCommandHelper(newRoute, command);
+
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
 
@@ -41,59 +44,64 @@ namespace MatakDBConnector
             if (route.RouteId == 0)
             {
                 errorMessage = "Invalid route ID (0)";
-                return -1;               
+                return -1;
             }
-            
-            try
-            {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText = "UPDATE route SET name = (@name), start_datetime = (@start_datetime), end_datetime = (@end_datetime), geojson_doc_id = (@geojson_doc_id), reason_id = (@reason_id), priority_id = (@priority_id), status_id = (@status_id), org_id = (@org_id), created_by_user_id = (@created_by_user_id), sent_to_user_id = (@sent_to_user_id), approved_by_user_id = (@approved_by_user_id), note = (@note), created = (@created), updated = (@updated), trip_area = st_geomfromgeojson(@trip_area) WHERE route_id = (@routeId) RETURNING route_id";
-                DbConnector.Command.Parameters.AddWithValue("routeId", route.RouteId);
-                newRouteCommandHelper(route);
 
-                return Convert.ToInt32(DbConnector.Command.ExecuteScalar());
-            }
-            catch (Exception e)
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    command.CommandText =
+                        "UPDATE route SET name = (@name), start_datetime = (@start_datetime), end_datetime = (@end_datetime), geojson_doc_id = (@geojson_doc_id), reason_id = (@reason_id), priority_id = (@priority_id), status_id = (@status_id), org_id = (@org_id), created_by_user_id = (@created_by_user_id), sent_to_user_id = (@sent_to_user_id), approved_by_user_id = (@approved_by_user_id), note = (@note), created = (@created), updated = (@updated), trip_area = st_geomfromgeojson(@trip_area) WHERE route_id = (@routeId) RETURNING route_id";
+                    command.Parameters.AddWithValue("routeId", route.RouteId);
+                    newRouteCommandHelper(route, command);
+
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
-        
+
         public Route GetRouteById(int routeId, out string errorMessage)
         {
             errorMessage = null;
             
-            try
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE route_id = (@routeId)";
-                DbConnector.Command.Parameters.AddWithValue("routeId", routeId);
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    return RouteMaker(DbConnector.Reader);
-                }
+                    connection.Open();
 
-                return null;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE route_id = (@routeId)";
+                    command.Parameters.AddWithValue("routeId", routeId);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        return RouteMaker(reader);
+                    }
+
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
         
@@ -101,31 +109,33 @@ namespace MatakDBConnector
         {   
             errorMessage = null;
             var count = -1;
-            
-            try
-            {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText = "SELECT count(*) FROM route WHERE org_id = (@orgId)";
-                DbConnector.Command.Parameters.AddWithValue("orgId", orgId);
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
-                while (DbConnector.Reader.Read())
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
                 {
-                     count = DbConnector.Reader.GetInt32(0);
-                }
+                    connection.Open();
 
-                return count;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT count(*) FROM route WHERE org_id = (@orgId)";
+                    command.Parameters.AddWithValue("orgId", orgId);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        count = reader.GetInt32(0);
+                    }
+
+                    return count;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
 
@@ -133,30 +143,32 @@ namespace MatakDBConnector
         {
             errorMessage = null;
             List<Route> allRoutes = new List<Route>();
-            
-            try
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
-                DbConnector.Connect();
-
-                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route";
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-
-                while (DbConnector.Reader.Read())
+                try
                 {
-                    Route route = new Route();
-                    allRoutes.Add(route.RouteMaker(DbConnector.Reader));
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route";
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Route route = new Route();
+                        allRoutes.Add(route.RouteMaker(reader));
+                    }
+                    return allRoutes;
                 }
-                return allRoutes;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
 
@@ -164,33 +176,35 @@ namespace MatakDBConnector
         {
             errorMessage = null;
             List<Route> allRoutesByOrgId = new List<Route>();
-            
-            try
-            {
-                DbConnector.Connect();
-                
-                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE org_id = (@orgId)";
-                DbConnector.Command.Parameters.AddWithValue("orgId", orgId);
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
 
-                while (DbConnector.Reader.Read())
-                {
-                    Route route = new Route();
-                    allRoutesByOrgId.Add(route.RouteMaker(DbConnector.Reader));          
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {                    
+                    connection.Open();  
+                    
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE org_id = (@orgId)";
+                    command.Parameters.AddWithValue("orgId", orgId);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Route route = new Route();
+                        allRoutesByOrgId.Add(route.RouteMaker(reader));          
+                    }
+
+                    return allRoutesByOrgId;
+
                 }
-
-                return allRoutesByOrgId;
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
             }
         }
         
@@ -198,33 +212,35 @@ namespace MatakDBConnector
         {
             errorMessage = null;
             List<Route> allRoutesByCreatorId = new List<Route>();
-            
-            try
-            {
-                DbConnector.Connect();
 
-                DbConnector.Command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE created_by_user_id = (@createdByUserId)";
-                DbConnector.Command.Parameters.AddWithValue("createdByUserId", createdByUserId);
-                DbConnector.Reader = DbConnector.Command.ExecuteReader();
-                
-                while (DbConnector.Reader.Read())
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
                 {
-                    Route route = new Route();
-                    allRoutesByCreatorId.Add(route.RouteMaker(DbConnector.Reader));   
+                    connection.Open();  
+                    
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE created_by_user_id = (@createdByUserId)";
+                    command.Parameters.AddWithValue("createdByUserId", createdByUserId);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+                
+                    while (reader.Read())
+                    {
+                        Route route = new Route();
+                        allRoutesByCreatorId.Add(route.RouteMaker(reader));   
+                    }
+
+                    return allRoutesByCreatorId;
+
                 }
-
-                return allRoutesByCreatorId;
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                errorMessage = e.ToString();
-                throw;
-            }
-            finally
-            {
-                DbConnector.Disconnect();
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }      
             }
         }
     }
