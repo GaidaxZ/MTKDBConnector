@@ -243,5 +243,41 @@ namespace MatakDBConnector
                 }      
             }
         }
+          
+        public List<Route> GetAllRoutesByReceiverId(int sentToUserId, out string errorMessage)
+        {
+            errorMessage = null;
+            List<Route> allRoutesByReceiverId = new List<Route>();
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();  
+                    
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    command.CommandText = "SELECT route_id, name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, st_asgeojson(trip_area, 15, 0) FROM route WHERE sent_to_user_id = (@sentToUserId)";
+                    command.Parameters.AddWithValue("sentToUserId", sentToUserId);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+                
+                    while (reader.Read())
+                    {
+                        Route route = new Route();
+                        allRoutesByReceiverId.Add(route.RouteMaker(reader));   
+                    }
+
+                    return allRoutesByReceiverId;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }      
+            }
+        }
     }
 }
