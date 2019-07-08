@@ -44,7 +44,7 @@ namespace MatakDBConnector
         {
             User user = new User();
             
-            user.UsedId = reader.GetInt32(0);
+            user.UserId = reader.GetInt32(0);
             user.Password = reader.GetString(1);
             user.PhoneId = reader.GetInt32(2);
             user.LastName = reader.GetString(3);
@@ -57,7 +57,7 @@ namespace MatakDBConnector
             return user;
         }
 
-        public int UsedId
+        public int UserId
         {
             get => _userId;
             set => _userId = value;
