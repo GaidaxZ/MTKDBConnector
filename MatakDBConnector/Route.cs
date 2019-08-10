@@ -81,7 +81,7 @@ namespace MatakDBConnector
             return this;
         }
         
-        protected void newRouteCommandHelper(Route route, NpgsqlCommand command)
+        protected void newRouteCommandHelper(Route route, NpgsqlCommand command, Boolean isNew)
         {
             command.Parameters.AddWithValue("name", route.Name);
             command.Parameters.AddWithValue("start_datetime", route.StartDatetime);
@@ -93,7 +93,14 @@ namespace MatakDBConnector
             command.Parameters.AddWithValue("org_id", route.OrgId);
             command.Parameters.AddWithValue("created_by_user_id", route.CreatedByUserId);
             command.Parameters.AddWithValue("sent_to_user_id", route.SentToUserId);
-            command.Parameters.AddWithValue("approved_by_user_id", 0);
+            if (isNew)
+            {
+                command.Parameters.AddWithValue("approved_by_user_id", 0);
+            }
+            else
+            {
+                command.Parameters.AddWithValue("approved_by_user_id", route.ApprovedByUserId);
+            }
             command.Parameters.AddWithValue("note", route.Note);
             command.Parameters.AddWithValue("created", DateTime.Now);
             command.Parameters.AddWithValue("updated", DateTime.Now);
