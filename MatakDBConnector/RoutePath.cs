@@ -1,16 +1,13 @@
 ﻿using Npgsql;
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 
 namespace MatakDBConnector
 {
     public class RoutePath
     {
         private int _routePathId;
-        private int _routeID;
-        private String _Geomtry;
+        private int _routeId;
+        private String _geometry;
         private String _note;
         private int _reasonId;
         private int _createdByUserId;
@@ -21,8 +18,8 @@ namespace MatakDBConnector
         public RoutePath()
         {
             _routePathId = 0;
-            _routeID = 0;
-            _Geomtry = "0";
+            _routeId = 0;
+            _geometry = "0";
             _note = "0";
             _reasonId = 0;
             _createdByUserId = 0;
@@ -34,8 +31,8 @@ namespace MatakDBConnector
             DateTime created, DateTime updated)
         {
             this._routePathId = RoutePathId;
-            this._routeID = routeid;
-            this._Geomtry = path;
+            this._routeId = routeid;
+            this._geometry = path;
             this._note = note;
             this._createdByUserId = createdByUserId;
             this._reasonId = reason;
@@ -47,8 +44,8 @@ namespace MatakDBConnector
              DateTime created, DateTime updated)
         {
             this._routePathId = 0;
-            this._routeID = routeid;
-            this._Geomtry = path;
+            this._routeId = routeid;
+            this._geometry = path;
             this._note = note;
             this._createdByUserId = createdByUserId;
             this._reasonId = reason;
@@ -96,14 +93,14 @@ namespace MatakDBConnector
 
         public int RouteId
         {
-            get => _routeID;
-            set => _routeID = value;
+            get => _routeId;
+            set => _routeId = value;
         }
 
         public String Geomtry
         {
-            get => _Geomtry;
-            set => _Geomtry = value;
+            get => _geometry;
+            set => _geometry = value;
         }
 
         public int ReasonId
