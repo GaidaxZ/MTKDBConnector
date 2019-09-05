@@ -149,7 +149,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
 
-                    command.CommandText = "SELECT landmarl_id, name, start_datetime, end_datetime, landmark_status_id, created_by_user_id, updated_by_user_id, note, st_asgeojson(landmark_area, 15, 0) FROM landmark WHERE created_by_user_id = (@createdByUserId)";
+                    command.CommandText = "SELECT landmark_id, name, start_datetime, end_datetime, landmark_status_id, created_by_user_id, updated_by_user_id, note, st_asgeojson(landmark_area, 15, 0) FROM landmark WHERE created_by_user_id = (@createdByUserId)";
                     command.Parameters.AddWithValue("createdByUserId", createdByUserId);
                     NpgsqlDataReader reader = command.ExecuteReader();
                 

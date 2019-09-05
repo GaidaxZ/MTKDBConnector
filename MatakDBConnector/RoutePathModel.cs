@@ -6,7 +6,6 @@ namespace MatakDBConnector
 {
     public class RoutePathModel : RoutePath
     {
-
         public List<RoutePath> GetAllRoutePaths(out String errorMessage)
         {
             errorMessage = null;

@@ -49,11 +49,11 @@ namespace MatakDBConnector
             Name = reader.GetString(1);
             StartDatetime = reader.GetDateTime(2);
             EndDatetime = reader.GetDateTime(3);
-            LandmarkStatusId = reader.GetInt32(7);
-            CreatedByUserId = reader.GetInt32(9);
-            UpdatedByUserId = reader.GetInt32(11);
-            Note = reader.GetString(12);
-            GeoJsonString = reader.GetString(13);
+            LandmarkStatusId = reader.GetInt32(4);
+            CreatedByUserId = reader.GetInt32(5);
+            UpdatedByUserId = reader.GetInt32(6);
+            Note = reader.GetString(7);
+            GeoJsonString = reader.GetString(8);
                 
             return this;
         }
