@@ -55,7 +55,7 @@ namespace MatakDBConnector
 
                     command.CommandText =
                         "UPDATE landmark SET name = (@name), start_datetime = (@start_datetime), end_datetime = (@end_datetime), landmark_status_id = (@landmark_status_id), updated_by_user_id = (@updated_by_user_id), note = (@note), created = (@created), updated = (@updated), landmark_area = st_geomfromgeojson(@landmark_area) WHERE landmark_id = (@landmarkId) RETURNING landmark_id";
-                    command.Parameters.AddWithValue("landmark", landmark.LandmarkId);
+                    command.Parameters.AddWithValue("landmarkId", landmark.LandmarkId);
                     newLandmarkCommandHelper(landmark, command);
 
                     return Convert.ToInt32(command.ExecuteScalar());
