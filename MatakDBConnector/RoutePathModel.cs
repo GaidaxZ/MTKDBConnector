@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Npgsql;
 // RoutePathModel 
+//first class
 namespace MatakDBConnector
 {
     public class RoutePathModel : RoutePath

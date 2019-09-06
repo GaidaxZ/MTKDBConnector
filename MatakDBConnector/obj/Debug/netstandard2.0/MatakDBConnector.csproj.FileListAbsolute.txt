@@ -16,3 +16,12 @@ C:\Users\gamer\Source\Repos\GaidaxZ\MTKDBConnector\MatakDBConnector\obj\Debug\ne
 C:\Users\gamer\Source\Repos\GaidaxZ\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.csproj.CoreCompileInputs.cache
 C:\Users\gamer\Source\Repos\GaidaxZ\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.AssemblyInfoInputs.cache
 C:\Users\gamer\Source\Repos\GaidaxZ\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.AssemblyInfo.cs
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\bin\Debug\netstandard2.0\MatakDBConnector.deps.json
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\bin\Debug\netstandard2.0\MatakDBConnector.dll
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\bin\Debug\netstandard2.0\MatakDBConnector.pdb
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.csprojAssemblyReference.cache
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.csproj.CoreCompileInputs.cache
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.AssemblyInfoInputs.cache
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.AssemblyInfo.cs
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.dll
+C:\Users\gamer\Documents\GitHub\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.pdb

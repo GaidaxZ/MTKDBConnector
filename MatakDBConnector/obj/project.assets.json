@@ -516,11 +516,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\gamer\\Source\\Repos\\GaidaxZ\\MTKDBConnector\\MatakDBConnector\\MatakDBConnector.csproj",
+      "projectUniqueName": "C:\\Users\\gamer\\Documents\\GitHub\\MTKDBConnector\\MatakDBConnector\\MatakDBConnector.csproj",
       "projectName": "MatakDBConnector",
-      "projectPath": "C:\\Users\\gamer\\Source\\Repos\\GaidaxZ\\MTKDBConnector\\MatakDBConnector\\MatakDBConnector.csproj",
+      "projectPath": "C:\\Users\\gamer\\Documents\\GitHub\\MTKDBConnector\\MatakDBConnector\\MatakDBConnector.csproj",
       "packagesPath": "C:\\Users\\gamer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\gamer\\Source\\Repos\\GaidaxZ\\MTKDBConnector\\MatakDBConnector\\obj\\",
+      "outputPath": "C:\\Users\\gamer\\Documents\\GitHub\\MTKDBConnector\\MatakDBConnector\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
