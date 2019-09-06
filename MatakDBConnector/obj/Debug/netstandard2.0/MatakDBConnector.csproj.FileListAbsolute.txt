@@ -7,3 +7,5 @@
 /Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.AssemblyInfo.cs
 /Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.dll
 /Users/olegs/RiderProjects/MatakDBConnector/MatakDBConnector/obj/Debug/netstandard2.0/MatakDBConnector.pdb
+C:\Users\gamer\Source\Repos\GaidaxZ\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.dll
+C:\Users\gamer\Source\Repos\GaidaxZ\MTKDBConnector\MatakDBConnector\obj\Debug\netstandard2.0\MatakDBConnector.pdb
