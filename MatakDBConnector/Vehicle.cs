@@ -1,4 +1,3 @@
-
 using Npgsql;
 
 namespace MatakDBConnector

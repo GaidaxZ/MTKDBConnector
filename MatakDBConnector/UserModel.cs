@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace MatakDBConnector
 {
