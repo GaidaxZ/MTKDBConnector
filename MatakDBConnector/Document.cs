@@ -13,25 +13,36 @@ namespace MatakDBConnector
         private int _createdByUserId;
         private int _updatedByUserId;
 
+        public Document()
+        {
+            _documentId = 0;
+            _routeId = 0;
+            _description = "";
+            _created = DateTime.Now;
+            _updated = DateTime.Now;
+            _createdByUserId = 0;
+            _updatedByUserId = 0;
+        }
+
         public Document(int documentId, int routeId, string d, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
         {
             _documentId = documentId;
-            this._routeId = routeId;
-            this._description = d;
-            this._created = created;
-            this._updated = updated;
-            this._createdByUserId = createdByUserId;
-            this._updatedByUserId = updatedByUserId;
+            _routeId = routeId;
+            _description = d;
+            _created = created;
+            _updated = updated;
+            _createdByUserId = createdByUserId;
+            _updatedByUserId = updatedByUserId;
         }
 
         public Document(int routeId, string d, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
         {
-            this._routeId = routeId;
-            this._description = d;
-            this._created = created;
-            this._updated = updated;
-            this._createdByUserId = createdByUserId;
-            this._updatedByUserId = updatedByUserId;
+            _routeId = routeId;
+            _description = d;
+            _created = created;
+            _updated = updated;
+            _createdByUserId = createdByUserId;
+            _updatedByUserId = updatedByUserId;
         }
         
         public Document DocumentMaker(NpgsqlDataReader reader)
