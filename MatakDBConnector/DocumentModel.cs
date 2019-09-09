@@ -77,13 +77,13 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT route_id, description FROM document WHERE route_id = (@documentId)";
+                    command.CommandText = "SELECT route_id FROM document WHERE route_id = (@documentId)";
                     command.Parameters.AddWithValue("documentId", documentId);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        documentHandle = reader.GetInt32(0) + "_" + documentId + "_" + reader.GetString(1);
+                        documentHandle = reader.GetInt32(0) + "_" + documentId;
                     }
 
                     return documentHandle;
