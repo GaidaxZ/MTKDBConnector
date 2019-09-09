@@ -38,12 +38,6 @@ namespace MatakDBConnector
         {
             errorMessage = null;
 
-            if (document.DocumentId == 0)
-            {
-                errorMessage = "Invalid document ID received (0)";
-                return -1;
-            }
-            
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
                 try
@@ -116,7 +110,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT route_id, description, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE route_id = (@documentId)";
+                    command.CommandText = "SELECT document_id, route_id, description, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE route_id = (@documentId)";
                     command.Parameters.AddWithValue("documentId", documentId);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
@@ -151,7 +145,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT route_id, description, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE route_id = (@routeId)";
+                    command.CommandText = "SELECT document_id, route_id, description, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE route_id = (@routeId)";
                     command.Parameters.AddWithValue("routeId", routeId);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
