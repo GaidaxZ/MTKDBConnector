@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Npgsql;
 
 namespace MatakDBConnector
@@ -126,6 +127,41 @@ namespace MatakDBConnector
 
                     errorMessage = "Specified document ID was not found in the database - " + documentId;
                     return null;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+
+        public List<Document> GetAllDocumentsByRouteId(int routeId, out string errorMessage)
+        {
+            errorMessage = null;
+            List<Document> documents = new List<Document>();
+            
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT route_id, description, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE route_id = (@routeId)";
+                    command.Parameters.AddWithValue("routeId", routeId);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Document document = new Document();
+                        documents.Add(document.DocumentMaker(reader));
+                    }
+
+                    return documents;
                 }
                 catch (Exception e)
                 {
