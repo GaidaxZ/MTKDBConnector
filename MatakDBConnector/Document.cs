@@ -72,6 +72,7 @@ namespace MatakDBConnector
             else
             {
                 command.Parameters.AddWithValue("updated_by_user_id", document.UpdatedByUserId);
+                command.Parameters.AddWithValue("updated", DateTime.Now);
             }
         }
 
