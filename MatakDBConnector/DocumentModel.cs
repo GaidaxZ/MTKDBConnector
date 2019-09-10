@@ -20,7 +20,7 @@ namespace MatakDBConnector
                     command.Connection = connection;                                     
                 
                     command.CommandText =
-                        "INSERT INTO document (route_id, description, created, updated, created_by_user_id, updated_by_user_id) VALUES (@route_id, @description, @created, @updated, @created_by_user_id, @updated_by_user_id ) RETURNING document_id";
+                        "INSERT INTO document (route_id, filename, created, updated, created_by_user_id, updated_by_user_id) VALUES (@route_id, @filename, @created, @updated, @created_by_user_id, @updated_by_user_id ) RETURNING document_id";
                     newDocumentCommandHelper(newDocument, command, true);
 
                     return Convert.ToInt32(command.ExecuteScalar());
@@ -48,7 +48,7 @@ namespace MatakDBConnector
                     command.Connection = connection;                                     
                 
                     command.CommandText =
-                        "UPDATE document SET route_id = (@route_id), description = (@description), created = (@created), updated = (@updated), created_by_user_id = (@created_by_user_id), updated_by_user_id = (@updated_by_user_id) WHERE document_id = (@document_id) RETURNING document_id";
+                        "UPDATE document SET route_id = (@route_id), filename = (@filename), created = (@created), updated = (@updated), created_by_user_id = (@created_by_user_id), updated_by_user_id = (@updated_by_user_id) WHERE document_id = (@document_id) RETURNING document_id";
                     newDocumentCommandHelper(document, command, false);
                     command.Parameters.AddWithValue("document_id", document.DocumentId);
 
@@ -77,7 +77,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT route_id FROM document WHERE route_id = (@documentId)";
+                    command.CommandText = "SELECT route_id FROM document WHERE document_id = (@documentId)";
                     command.Parameters.AddWithValue("documentId", documentId);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
@@ -110,7 +110,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT document_id, route_id, description, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE route_id = (@documentId)";
+                    command.CommandText = "SELECT document_id, route_id, filename, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE document_id = (@documentId)";
                     command.Parameters.AddWithValue("documentId", documentId);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
@@ -145,7 +145,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT document_id, route_id, description, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE route_id = (@routeId)";
+                    command.CommandText = "SELECT document_id, route_id, filename, created, updated, created_by_user_id, updated_by_user_id FROM document WHERE route_id = (@routeId)";
                     command.Parameters.AddWithValue("routeId", routeId);
                     NpgsqlDataReader reader = command.ExecuteReader();
 

@@ -7,7 +7,7 @@ namespace MatakDBConnector
     {
         private int _documentId;
         private int _routeId;
-        private string _description;
+        private string _filename;
         private DateTime _created;
         private DateTime _updated;
         private int _createdByUserId;
@@ -17,7 +17,7 @@ namespace MatakDBConnector
         {
             _documentId = 0;
             _routeId = 0;
-            _description = "";
+            _filename = "";
             _created = DateTime.Now;
             _updated = DateTime.Now;
             _createdByUserId = 0;
@@ -28,7 +28,7 @@ namespace MatakDBConnector
         {
             _documentId = documentId;
             _routeId = routeId;
-            _description = d;
+            _filename = d;
             _created = created;
             _updated = updated;
             _createdByUserId = createdByUserId;
@@ -38,7 +38,7 @@ namespace MatakDBConnector
         public Document(int routeId, string d, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
         {
             _routeId = routeId;
-            _description = d;
+            _filename = d;
             _created = created;
             _updated = updated;
             _createdByUserId = createdByUserId;
@@ -49,7 +49,7 @@ namespace MatakDBConnector
         {
             DocumentId = reader.GetInt32(0);
             RouteId = reader.GetInt32(1);
-            Description = reader.GetString(2);
+            Filename = reader.GetString(2);
             Created = reader.GetDateTime(3);
             Updated = reader.GetDateTime(4);;
             CreatedByUserId = reader.GetInt32(5);
@@ -61,7 +61,7 @@ namespace MatakDBConnector
         protected void newDocumentCommandHelper(Document document, NpgsqlCommand command, Boolean isNew)
         {
             command.Parameters.AddWithValue("route_id", document.RouteId);
-            command.Parameters.AddWithValue("description", document.Description);
+            command.Parameters.AddWithValue("filename", document.Filename);
             command.Parameters.AddWithValue("created", document.Created);
             command.Parameters.AddWithValue("updated", document.Updated);
             command.Parameters.AddWithValue("created_by_user_id", document.CreatedByUserId);
@@ -88,10 +88,10 @@ namespace MatakDBConnector
             set => _routeId = value;
         }
 
-        public string Description
+        public string Filename
         {
-            get => _description;
-            set => _description = value;
+            get => _filename;
+            set => _filename = value;
         }
 
         public DateTime Created
