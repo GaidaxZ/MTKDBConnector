@@ -24,21 +24,21 @@ namespace MatakDBConnector
             _updatedByUserId = 0;
         }
 
-        public Document(int documentId, int routeId, string d, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
+        public Document(int documentId, int routeId, string filename, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
         {
             _documentId = documentId;
             _routeId = routeId;
-            _filename = d;
+            _filename = filename;
             _created = created;
             _updated = updated;
             _createdByUserId = createdByUserId;
             _updatedByUserId = updatedByUserId;
         }
 
-        public Document(int routeId, string d, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
+        public Document(int routeId, string filename, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
         {
             _routeId = routeId;
-            _filename = d;
+            _filename = filename;
             _created = created;
             _updated = updated;
             _createdByUserId = createdByUserId;
