@@ -12,6 +12,7 @@ namespace MatakDBConnector
         private DateTime _updated;
         private int _createdByUserId;
         private int _updatedByUserId;
+        private Boolean _isLandmark;
 
         public Document()
         {
@@ -22,9 +23,10 @@ namespace MatakDBConnector
             _updated = DateTime.Now;
             _createdByUserId = 0;
             _updatedByUserId = 0;
+            _isLandmark = false;
         }
 
-        public Document(int documentId, int routeId, string filename, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
+        public Document(int documentId, int routeId, string filename, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId, Boolean isLandmark)
         {
             _documentId = documentId;
             _routeId = routeId;
@@ -33,9 +35,10 @@ namespace MatakDBConnector
             _updated = updated;
             _createdByUserId = createdByUserId;
             _updatedByUserId = updatedByUserId;
+            _isLandmark = isLandmark;
         }
 
-        public Document(int routeId, string filename, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId)
+        public Document(int routeId, string filename, DateTime created, DateTime updated, int createdByUserId, int updatedByUserId, Boolean isLandmark)
         {
             _routeId = routeId;
             _filename = filename;
@@ -43,6 +46,7 @@ namespace MatakDBConnector
             _updated = updated;
             _createdByUserId = createdByUserId;
             _updatedByUserId = updatedByUserId;
+            _isLandmark = isLandmark;
         }
         
         public Document DocumentMaker(NpgsqlDataReader reader)
@@ -54,6 +58,7 @@ namespace MatakDBConnector
             Updated = reader.GetDateTime(4);;
             CreatedByUserId = reader.GetInt32(5);
             UpdatedByUserId = reader.GetInt32(6);
+            IsLandmark = reader.GetBoolean(7);
             
             return this;
         }
@@ -64,10 +69,12 @@ namespace MatakDBConnector
             command.Parameters.AddWithValue("filename", document.Filename);
             command.Parameters.AddWithValue("created", document.Created);
             command.Parameters.AddWithValue("updated", document.Updated);
+            command.Parameters.AddWithValue("is_landmark", document.IsLandmark);
             command.Parameters.AddWithValue("created_by_user_id", document.CreatedByUserId);
             if (isNew)
             {
                 command.Parameters.AddWithValue("updated_by_user_id", document.CreatedByUserId);
+                command.Parameters.AddWithValue("created", DateTime.Now);
             }
             else
             {
@@ -116,6 +123,12 @@ namespace MatakDBConnector
         {
             get => _updatedByUserId;
             set => _updatedByUserId = value;
+        }
+
+        public bool IsLandmark
+        {
+            get => _isLandmark;
+            set => _isLandmark = value;
         }
     }
 }
