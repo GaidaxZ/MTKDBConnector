@@ -131,7 +131,7 @@ namespace MatakDBConnector
             }
         }
 
-        public List<Document> GetAllDocumentsByRouteId(int routeId, out string errorMessage)
+        public List<Document> GetAllDocumentsByRouteLanmdmarkId(int routeId, Boolean isLandmark, out string errorMessage)
         {
             errorMessage = null;
             List<Document> documents = new List<Document>();
@@ -145,8 +145,10 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT document_id, route_id, filename, created, updated, created_by_user_id, updated_by_user_id, is_landmark FROM document WHERE route_id = (@routeId)";
+                    command.CommandText = "SELECT document_id, route_id, filename, created, updated, created_by_user_id, updated_by_user_id, is_landmark FROM document WHERE route_id = (@routeId) AND is_landmark = (@isLandmark)";
                     command.Parameters.AddWithValue("routeId", routeId);
+                    command.Parameters.AddWithValue("isLandmark", isLandmark);
+                    
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
