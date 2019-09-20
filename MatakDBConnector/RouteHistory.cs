@@ -3,10 +3,9 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class Route
+    public class RouteHistory
     {
-        //TODO add created and updated dates 
-        //TODO newRouteCommandHelper should differentiate between updated and new route for created timestamp
+        private int _routeHistoryId;
         private int _routeId;
         private string _name;
         private DateTime _startDatetime;
@@ -22,8 +21,9 @@ namespace MatakDBConnector
         private string _note;
         private string _geoJsonString;
 
-        public Route()
+        public RouteHistory()
         {
+            _routeHistoryId = 0;
             _routeId = 0;
             _name = "0";
             _startDatetime = DateTime.Now;
@@ -39,49 +39,31 @@ namespace MatakDBConnector
             _note = "0";
             _geoJsonString = "0";
         }
-        
-        public Route(int routeId, string name, DateTime startDatetime, DateTime endDatetime, int geojsonDocId,
-            int reasonId, int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId,
-            int approvedByUserId, string note, string geoJsonString)
-        {
-            _routeId = routeId;
-            _name = name;
-            _startDatetime = startDatetime;
-            _endDatetime = endDatetime;
-            _geojsonDocId = geojsonDocId;
-            _reasonId = reasonId;
-            _priorityId = priorityId;
-            _statusId = statusId;
-            _orgId = orgId;
-            _createdByUserId = createdByUserId;
-            _sentToUserId = sentToUserId;
-            _approvedByUserId = approvedByUserId;
-            _note = note;
-            _geoJsonString = geoJsonString;
-        }
 
-        public Route RouteMaker(NpgsqlDataReader reader)
+        public RouteHistory RouteHistoryMaker(NpgsqlDataReader reader)
         {
-            RouteId = reader.GetInt32(0);
-            Name = reader.GetString(1);
-            StartDatetime = reader.GetDateTime(2);
-            EndDatetime = reader.GetDateTime(3);
-            GeojsonDocId = reader.GetInt32(4);
-            ReasonId = reader.GetInt32(5);
-            PriorityId = reader.GetInt32(6);
-            StatusId = reader.GetInt32(7);
-            OrgId = reader.GetInt32(8);
-            CreatedByUserId = reader.GetInt32(9);
-            SentToUserId = reader.GetInt32(10);
-            ApprovedByUserId = reader.GetInt32(11);
-            Note = reader.GetString(12);
-            GeoJsonString = reader.GetString(13);
+            RouteHistoryId = reader.GetInt32(0);
+            RouteId = reader.GetInt32(1);
+            Name = reader.GetString(2);
+            StartDatetime = reader.GetDateTime(3);
+            EndDatetime = reader.GetDateTime(4);
+            GeojsonDocId = reader.GetInt32(5);
+            ReasonId = reader.GetInt32(6);
+            PriorityId = reader.GetInt32(7);
+            StatusId = reader.GetInt32(8);
+            OrgId = reader.GetInt32(9);
+            CreatedByUserId = reader.GetInt32(10);
+            SentToUserId = reader.GetInt32(11);
+            ApprovedByUserId = reader.GetInt32(12);
+            Note = reader.GetString(13);
+            GeoJsonString = reader.GetString(14);
                 
             return this;
         }
         
-        protected void newRouteCommandHelper(Route route, NpgsqlCommand command, Boolean isNew)
+        protected void newRouteHistoryCommandHelper(Route route, NpgsqlCommand command)
         {
+            command.Parameters.AddWithValue("route_id", route.RouteId);
             command.Parameters.AddWithValue("name", route.Name);
             command.Parameters.AddWithValue("start_datetime", route.StartDatetime);
             command.Parameters.AddWithValue("end_datetime", route.EndDatetime);
@@ -92,19 +74,17 @@ namespace MatakDBConnector
             command.Parameters.AddWithValue("org_id", route.OrgId);
             command.Parameters.AddWithValue("created_by_user_id", route.CreatedByUserId);
             command.Parameters.AddWithValue("sent_to_user_id", route.SentToUserId);
-            if (isNew)
-            {
-                command.Parameters.AddWithValue("approved_by_user_id", 0);
-            }
-            else
-            {
-                command.Parameters.AddWithValue("approved_by_user_id", route.ApprovedByUserId);
-                //TODO add created and updated to route
-            }
+            command.Parameters.AddWithValue("approved_by_user_id", route.ApprovedByUserId);
             command.Parameters.AddWithValue("note", route.Note);
             command.Parameters.AddWithValue("created", DateTime.Now);
             command.Parameters.AddWithValue("updated", DateTime.Now);
             command.Parameters.AddWithValue("trip_area", route.GeoJsonString);
+        }
+
+        public int RouteHistoryId
+        {
+            get => _routeHistoryId;
+            set => _routeHistoryId = value;
         }
 
         public int RouteId

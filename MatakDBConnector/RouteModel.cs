@@ -8,7 +8,6 @@ namespace MatakDBConnector
     {
         public int AddNewRoute(Route newRoute, out string errorMessage)
         {
-            //TODO: change to stored procedures
             errorMessage = null;
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
@@ -23,8 +22,13 @@ namespace MatakDBConnector
                     command.CommandText =
                         "INSERT INTO route (name, start_datetime, end_datetime, geojson_doc_id, reason_id, priority_id, status_id, org_id, created_by_user_id, sent_to_user_id, approved_by_user_id, note, created, updated, trip_area) VALUES (@name, @start_datetime, @end_datetime, @geojson_doc_id, @reason_id, @priority_id, @status_id, @org_id, @created_by_user_id, @sent_to_user_id, @approved_by_user_id, @note, @created, @updated, st_geomfromgeojson(@trip_area)) RETURNING route_id";
                     newRouteCommandHelper(newRoute, command, true);
+                    
+                    newRoute.RouteId = Convert.ToInt32(command.ExecuteScalar());
 
-                    return Convert.ToInt32(command.ExecuteScalar());
+                    RouteHistoryModel routeHistoryModel = new RouteHistoryModel();
+                    routeHistoryModel.AddNewRouteHistory(newRoute, out errorMessage);
+
+                    return newRoute.RouteId;
                 }
                 catch (Exception e)
                 {
@@ -59,7 +63,12 @@ namespace MatakDBConnector
                     command.Parameters.AddWithValue("routeId", route.RouteId);
                     newRouteCommandHelper(route, command, false);
 
-                    return Convert.ToInt32(command.ExecuteScalar());
+                    route.RouteId = Convert.ToInt32(command.ExecuteScalar());
+
+                    RouteHistoryModel routeHistoryModel = new RouteHistoryModel();
+                    routeHistoryModel.AddNewRouteHistory(route, out errorMessage);
+
+                    return route.RouteId;
                 }
                 catch (Exception e)
                 {
