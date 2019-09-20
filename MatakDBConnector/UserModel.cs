@@ -6,7 +6,6 @@ namespace MatakDBConnector
 {
     public class UserModel : User
     {
-        //TODO getUserById, getUserByEmail
         public List<User> getAllUsers(out string errorMessage)
         {
             List<User> allUsers = new List<User>();
