@@ -6,6 +6,7 @@ namespace MatakDBConnector
 {
     public class UserModel : User
     {
+        //TODO getUserById, getUserByEmail
         public List<User> getAllUsers(out string errorMessage)
         {
             List<User> allUsers = new List<User>();
@@ -40,6 +41,74 @@ namespace MatakDBConnector
             }
         }
 
+        public User getUserByUserId(int userId, out string errorMessage)
+        {
+            errorMessage = null;
+            
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM playground.public.user WHERE user_id = (@userId)";
+                    command.Parameters.AddWithValue("userId", userId);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        return UserMaker(reader);
+                    }
+
+                    errorMessage = "User not found";
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+
+        public User getUserByEmail(string email, out string errorMessage)
+        {
+            errorMessage = null;
+            
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM playground.public.user WHERE email = (@email)";
+                    command.Parameters.AddWithValue("email", email);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        return UserMaker(reader);
+                    }
+
+                    errorMessage = "User not found";
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
         public List<User> getAllUsersByOrgId(int orgId, out string errorMessage)
         {
             List<User> allUsers = new List<User>();

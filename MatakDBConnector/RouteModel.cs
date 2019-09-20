@@ -92,6 +92,7 @@ namespace MatakDBConnector
                         return RouteMaker(reader);
                     }
 
+                    errorMessage = "Route not found";
                     return null;
                 }
                 catch (Exception e)
