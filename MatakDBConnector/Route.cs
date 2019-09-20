@@ -40,6 +40,26 @@ namespace MatakDBConnector
             _geoJsonString = "0";
         }
         
+        public Route(string name, DateTime startDatetime, DateTime endDatetime, int geojsonDocId,
+            int reasonId, int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId,
+            int approvedByUserId, string note, string geoJsonString)
+        {
+            _routeId = 0;
+            _name = name;
+            _startDatetime = startDatetime;
+            _endDatetime = endDatetime;
+            _geojsonDocId = geojsonDocId;
+            _reasonId = reasonId;
+            _priorityId = priorityId;
+            _statusId = statusId;
+            _orgId = orgId;
+            _createdByUserId = createdByUserId;
+            _sentToUserId = sentToUserId;
+            _approvedByUserId = approvedByUserId;
+            _note = note;
+            _geoJsonString = geoJsonString;
+        }
+        
         public Route(int routeId, string name, DateTime startDatetime, DateTime endDatetime, int geojsonDocId,
             int reasonId, int priorityId, int statusId, int orgId, int createdByUserId, int sentToUserId,
             int approvedByUserId, string note, string geoJsonString)
