@@ -7,6 +7,7 @@ namespace MatakDBConnector
     {
         //TODO add created and updated dates 
         //TODO newRouteCommandHelper should differentiate between updated and new route for created timestamp
+        //TODO delete this
         private int _routeId;
         private string _name;
         private DateTime _startDatetime;
