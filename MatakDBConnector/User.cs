@@ -56,6 +56,18 @@ namespace MatakDBConnector
                 
             return user;
         }
+        
+        protected void newUserCommandHelper(User user, NpgsqlCommand command)
+        {
+            command.Parameters.AddWithValue("password", user.Password);
+            command.Parameters.AddWithValue("phone_id", user.PhoneId);
+            command.Parameters.AddWithValue("last_name", user.LastName);
+            command.Parameters.AddWithValue("first_name", user.FirstName);
+            command.Parameters.AddWithValue("permission_id", user.PermissionId);
+            command.Parameters.AddWithValue("org_id", user.OrgId);
+            command.Parameters.AddWithValue("email", user.Email);
+            command.Parameters.AddWithValue("nickname", user.Nickname);
+        }
 
         public int UserId
         {

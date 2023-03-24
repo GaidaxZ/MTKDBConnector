@@ -6,7 +6,7 @@ namespace MatakDBConnector
 {
     public class UserModel : User
     {
-        public List<User> getAllUsers(out string errorMessage)
+        public List<User> GetAllUsers(out string errorMessage)
         {
             List<User> allUsers = new List<User>();
             errorMessage = null;
@@ -40,7 +40,7 @@ namespace MatakDBConnector
             }
         }
 
-        public User getUserByUserId(int userId, out string errorMessage)
+        public User GetUserByUserId(int userId, out string errorMessage)
         {
             errorMessage = null;
             
@@ -74,7 +74,7 @@ namespace MatakDBConnector
             }
         }
 
-        public User getUserByEmail(string email, out string errorMessage)
+        public User GetUserByEmail(string email, out string errorMessage)
         {
             errorMessage = null;
             
@@ -108,7 +108,7 @@ namespace MatakDBConnector
             }
         }
         
-        public List<User> getAllUsersByOrgId(int orgId, out string errorMessage)
+        public List<User> GetAllUsersByOrgId(int orgId, out string errorMessage)
         {
             List<User> allUsers = new List<User>();
             errorMessage = null;
@@ -143,7 +143,7 @@ namespace MatakDBConnector
             }
         }
 
-        public Boolean authenticateUser(string username, string password, out string errorMessage)
+        public string GetPasswordJson(string username, out string errorMessage)
         {
             errorMessage = null;
             string result = null;
@@ -164,14 +164,72 @@ namespace MatakDBConnector
                     while (reader.Read())
                     {
                         result = reader.GetString(0);
-                    
                     }
+                    
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
+        public string SetPasswordJson(string username, string passwordJson, out string errorMessage)
+        {
+            errorMessage = null;
+            string result = null;
 
-                    if (result == password)
-                        return true;
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "UPDATE postgres.cyberschema1.user SET password = (@passwordJson) WHERE nickname = (@nickname)";
+                    command.Parameters.AddWithValue("passwordJson", passwordJson);
+                    command.Parameters.AddWithValue("nickname", username);
+                    NpgsqlDataReader reader = command.ExecuteReader();
                 
-                    errorMessage = "Not found or no match";
-                    return false;
+                    while (reader.Read())
+                    {
+                        result = reader.GetString(0);
+                    }
+                    
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
+        public int AddNewUser(User newUser, out string errorMessage)
+        {
+            errorMessage = null;
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;                                     
+                
+                    command.CommandText =
+                        "INSERT INTO postgres.cyberschema1.user (password, phone_id, last_name, first_name, permission_id, org_id, email, nickname) VALUES (@password, @phone_id, @last_name, @first_name, @permission_id, @org_id, @email, @nickname) RETURNING user_id";
+                    newUserCommandHelper(newUser, command);
+
+                    return Convert.ToInt32(command.ExecuteScalar());
                 }
                 catch (Exception e)
                 {
