@@ -13,7 +13,7 @@ namespace MatakDBConnector
         private int _orgId;
         private string _email;
         private string _nickname;
-
+         
         public User()
         {
             _userId = 0;

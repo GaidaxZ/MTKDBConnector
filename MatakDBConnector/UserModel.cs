@@ -20,7 +20,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
 
-                    command.CommandText = "SELECT * FROM playground.public.user";
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.user";
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
@@ -53,7 +53,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT * FROM playground.public.user WHERE user_id = (@userId)";
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.user WHERE user_id = (@userId)";
                     command.Parameters.AddWithValue("userId", userId);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
@@ -87,7 +87,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT * FROM playground.public.user WHERE email = (@email)";
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.user WHERE email = (@email)";
                     command.Parameters.AddWithValue("email", email);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
@@ -122,7 +122,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT * FROM playground.public.user WHERE org_id = (@p)";
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.user WHERE org_id = (@p)";
                     command.Parameters.AddWithValue("p", orgId);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
@@ -157,7 +157,7 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT password FROM playground.public.user WHERE email = (@p)";
+                    command.CommandText = "SELECT password FROM postgres.cyberschema1.user WHERE nickname = (@p)";
                     command.Parameters.AddWithValue("p", username);
                     NpgsqlDataReader reader = command.ExecuteReader();
                 
