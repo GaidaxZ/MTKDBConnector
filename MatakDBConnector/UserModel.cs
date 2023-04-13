@@ -147,6 +147,7 @@ namespace MatakDBConnector
         {
             errorMessage = null;
             string result = null;
+            string commandEntry = "SELECT password FROM postgres.cyberschema1.user WHERE nickname = '" + username + "'";
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
@@ -157,8 +158,9 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "SELECT password FROM postgres.cyberschema1.user WHERE nickname = (@p)";
-                    command.Parameters.AddWithValue("p", username);
+                    //command.CommandText = "SELECT password FROM postgres.cyberschema1.user WHERE nickname = '(@p)'";
+                    //command.Parameters.AddWithValue("p", username);
+                    command.CommandText = commandEntry;
                     NpgsqlDataReader reader = command.ExecuteReader();
                 
                     while (reader.Read())
@@ -181,6 +183,7 @@ namespace MatakDBConnector
         {
             errorMessage = null;
             string result = null;
+            string commandEntry = "UPDATE postgres.cyberschema1.user SET password = '" + passwordJson + "' WHERE nickname ='" + username + "'";
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
@@ -191,9 +194,10 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
                     
-                    command.CommandText = "UPDATE postgres.cyberschema1.user SET password = (@passwordJson) WHERE nickname = (@nickname)";
-                    command.Parameters.AddWithValue("passwordJson", passwordJson);
-                    command.Parameters.AddWithValue("nickname", username);
+                    //command.CommandText = "UPDATE postgres.cyberschema1.user SET password = (@passwordJson) WHERE nickname = (@username)";
+                    //command.Parameters.AddWithValue("passwordJson", passwordJson);
+                    //command.Parameters.AddWithValue("nickname", username);
+                    command.CommandText = commandEntry;
                     NpgsqlDataReader reader = command.ExecuteReader();
                 
                     while (reader.Read())

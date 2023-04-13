@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class ReasonModel : Reason
+    public class SltModel : Slt
     {
-        public List<Reason> GetAllReasons(out string errorMessage)
+        public List<Slt> GetAllSlt(out string errorMessage)
         {
-            List<Reason> allReasons = new List<Reason>();
+            List<Slt> allSlt = new List<Slt>();
             errorMessage = null;
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
@@ -19,17 +19,17 @@ namespace MatakDBConnector
 
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
-                    
-                    command.CommandText = "SELECT * FROM reason";
+
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.slt";
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        Reason reason = new Reason();
-                        allReasons.Add(reason.ReasonMaker(reader));
+                        Slt slt = new Slt();
+                        allSlt.Add(slt.SltMaker(reader));
                     }
 
-                    return allReasons;
+                    return allSlt;
                 }
                 catch (Exception e)
                 {

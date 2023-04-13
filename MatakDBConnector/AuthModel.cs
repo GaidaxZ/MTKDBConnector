@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class VehicleModel : Vehicle
+    public class AuthModel : Auth
     {
-        public List<Vehicle> getAllVehicles(out string errorMessage)
+        public List<Auth> GetAllAuths(out string errorMessage)
         {
-            List<Vehicle> allVehicles = new List<Vehicle>();
+            List<Auth> allAuths = new List<Auth>();
             errorMessage = null;
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
@@ -19,17 +19,17 @@ namespace MatakDBConnector
 
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
-                    
-                    command.CommandText = "SELECT * FROM vehicle";
+
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.auth_verification";
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        Vehicle vehicle = new Vehicle();
-                        allVehicles.Add(vehicle.VehicleMaker(reader));
+                        Auth auth = new Auth();
+                        allAuths.Add(auth.AuthMaker(reader));
                     }
 
-                    return allVehicles;
+                    return allAuths;
                 }
                 catch (Exception e)
                 {
