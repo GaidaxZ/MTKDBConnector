@@ -143,11 +143,11 @@ namespace MatakDBConnector
             }
         }
 
-        public string GetPasswordJson(string username, out string errorMessage)
+        public string GetPasswordJson(string email, out string errorMessage)
         {
             errorMessage = null;
             string result = null;
-            string commandEntry = "SELECT password FROM postgres.cyberschema1.user WHERE nickname = '" + username + "'";
+            string commandEntry = "SELECT password FROM postgres.cyberschema1.user WHERE email = '" + email + "'";
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
@@ -179,11 +179,11 @@ namespace MatakDBConnector
             }
         }
         
-        public string SetPasswordJson(string username, string passwordJson, out string errorMessage)
+        public string SetPasswordJson(string email, string passwordJson, out string errorMessage)
         {
             errorMessage = null;
             string result = null;
-            string commandEntry = "UPDATE postgres.cyberschema1.user SET password = '" + passwordJson + "' WHERE nickname ='" + username + "'";
+            string commandEntry = "UPDATE postgres.cyberschema1.user SET password = '" + passwordJson + "' WHERE email ='" + email + "'";
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
             {
