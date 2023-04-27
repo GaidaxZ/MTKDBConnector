@@ -315,5 +315,74 @@ namespace MatakDBConnector
                 }
             }
         }
+        
+        public int GetLoginAttempts(string email, out string errorMessage)
+        {
+            errorMessage = null;
+            int result = -1;
+            string commandEntry = "SELECT login_attempts FROM postgres.cyberschema1.user WHERE email = '" + email + "'";
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    command.CommandText = commandEntry;
+                    NpgsqlDataReader reader = command.ExecuteReader();
+                
+                    while (reader.Read())
+                    {
+                        result = reader.GetInt32(0);
+                    }
+                    
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
+        public string SetLoginAttempts(string email, int loginAttempts, out string errorMessage)
+        {
+            errorMessage = null;
+            string result = null;
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    command.CommandText = "UPDATE postgres.cyberschema1.user SET login_attempts = (@loginAttempts) WHERE email = (@email)";
+                    command.Parameters.AddWithValue("loginAttempts", loginAttempts);
+                    command.Parameters.AddWithValue("email", email);
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        result = reader.GetString(0);
+                    }
+                    
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
     }
 }
