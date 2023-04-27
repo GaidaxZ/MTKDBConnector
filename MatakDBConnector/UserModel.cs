@@ -230,10 +230,82 @@ namespace MatakDBConnector
                     command.Connection = connection;                                     
                 
                     command.CommandText =
-                        "INSERT INTO postgres.cyberschema1.user (password, phone_id, last_name, first_name, permission_id, org_id, email, nickname) VALUES (@password, @phone_id, @last_name, @first_name, @permission_id, @org_id, @email, @nickname) RETURNING user_id";
+                        "INSERT INTO postgres.cyberschema1.user (password, phone_id, last_name, first_name, permission_id, org_id, email, nickname, last_login, login_attempts) VALUES (@password, @phone_id, @last_name, @first_name, @permission_id, @org_id, @email, @nickname, @last_login, @login_attempts) RETURNING user_id";
                     newUserCommandHelper(newUser, command);
 
                     return Convert.ToInt32(command.ExecuteScalar());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
+        public DateTime GetLastLoginDateTime(string email, out string errorMessage)
+        {
+            errorMessage = null;
+            DateTime result = DateTime.Now;
+            string commandEntry = "SELECT last_login FROM postgres.cyberschema1.user WHERE email = '" + email + "'";
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    //command.CommandText = "SELECT password FROM postgres.cyberschema1.user WHERE nickname = '(@p)'";
+                    //command.Parameters.AddWithValue("p", username);
+                    command.CommandText = commandEntry;
+                    NpgsqlDataReader reader = command.ExecuteReader();
+                
+                    while (reader.Read())
+                    {
+                        result = reader.GetDateTime(0);
+                    }
+                    
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
+        public string SetLastLogin(string email, DateTime lastLogin, out string errorMessage)
+        {
+            errorMessage = null;
+            string result = null;
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    command.CommandText = "UPDATE postgres.cyberschema1.user SET last_login = (@lastLogin) WHERE email = (@email)";
+                    command.Parameters.AddWithValue("lastLogin", lastLogin);
+                    command.Parameters.AddWithValue("email", email);
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        result = reader.GetString(0);
+                    }
+                    
+                    return result;
                 }
                 catch (Exception e)
                 {

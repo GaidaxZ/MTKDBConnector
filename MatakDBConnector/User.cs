@@ -1,3 +1,4 @@
+using System;
 using Npgsql;
 
 namespace MatakDBConnector
@@ -13,7 +14,10 @@ namespace MatakDBConnector
         private int _orgId;
         private string _email;
         private string _nickname;
-         
+        private DateTime _lastlogin;
+        private int _loginAttempts;
+        
+
         public User()
         {
             _userId = 0;
@@ -25,9 +29,11 @@ namespace MatakDBConnector
             _orgId = 0;
             _email = "0";
             _nickname = "0";
+            _lastlogin = DateTime.Now;
+            _loginAttempts = 0;
         }
 
-        public User(int userId, string password, int phoneId, string lastName, string firstName, int permissionId, int orgId, string email, string nickname)
+        public User(int userId, string password, int phoneId, string lastName, string firstName, int permissionId, int orgId, string email, string nickname, DateTime lastlogin, int loginAttempts)
         {
             _userId = userId;
             _password = password;
@@ -38,6 +44,8 @@ namespace MatakDBConnector
             _orgId = orgId;
             _email = email;
             _nickname = nickname;
+            _lastlogin = lastlogin;
+            _loginAttempts = loginAttempts;
         }
         
         public User UserMaker(NpgsqlDataReader reader)
@@ -53,6 +61,8 @@ namespace MatakDBConnector
             user.OrgId = reader.GetInt32(6);
             user.Email = reader.GetString(7);
             user.Nickname = reader.GetString(8);
+            user.Lastlogin = reader.GetDateTime(9);
+            user.LoginAttempts = reader.GetInt32(10);
                 
             return user;
         }
@@ -67,6 +77,8 @@ namespace MatakDBConnector
             command.Parameters.AddWithValue("org_id", user.OrgId);
             command.Parameters.AddWithValue("email", user.Email);
             command.Parameters.AddWithValue("nickname", user.Nickname);
+            command.Parameters.AddWithValue("last_login", user.Lastlogin);
+            command.Parameters.AddWithValue("login_attempts", user.LoginAttempts);
         }
 
         public int UserId
@@ -121,6 +133,18 @@ namespace MatakDBConnector
         {
             get => _nickname;
             set => _nickname = value;
+        }
+        
+        public DateTime Lastlogin
+        {
+            get => _lastlogin;
+            set => _lastlogin = value;
+        }
+        
+        public int LoginAttempts
+        {
+            get => _loginAttempts;
+            set => _loginAttempts = value;
         }
     }
 }
