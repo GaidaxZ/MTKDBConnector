@@ -384,5 +384,78 @@ namespace MatakDBConnector
                 }
             }
         }
+
+        public bool VerifyEmailPasswordMatch(string email, string password, out string errorMessage)
+        {
+            errorMessage = null;
+            object result;
+            
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT COUNT(*) FROM postgres.cyberschema1.user WHERE email = (@email) AND password = (@password)";
+                    command.Parameters.AddWithValue("email", email);
+                    command.Parameters.AddWithValue("password", password);
+                    result = command.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        int count = Convert.ToInt32(result);
+                        return count > 0;
+                    }
+
+                    errorMessage = "User/Password combination not found";
+                    return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
+        public bool VerifyEmailPasswordMatchVulnerable(string email, string password, out string errorMessage)
+        {
+            errorMessage = null;
+            object result;
+            string commandEntry = "SELECT COUNT(*) FROM postgres.cyberschema1.user WHERE email = '" + email + "' AND password = '" + password + "'";
+            
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = commandEntry;
+                    result = command.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        int count = Convert.ToInt32(result);
+                        return count > 0;
+                    }
+
+                    errorMessage = "User/Password combination not found";
+                    return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
     }
 }
