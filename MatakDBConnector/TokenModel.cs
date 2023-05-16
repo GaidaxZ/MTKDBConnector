@@ -4,11 +4,11 @@ using Npgsql;
 
 namespace MatakDBConnector
 {
-    public class ClientModel : Client
+    public class TokenModel : Token
     {
-        public List<Client> GetAllClients(out string errorMessage)
+        public List<Token> GetAllTokens(out string errorMessage)
         {
-            List<Client> allClients = new List<Client>();
+            List<Token> allTokens = new List<Token>();
             errorMessage = null;
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
@@ -20,16 +20,16 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
 
-                    command.CommandText = "SELECT * FROM postgres.cyberschema1.clients";
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.tokens";
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        Client client = new Client();
-                        allClients.Add(client.ClientMaker(reader));
+                        Token token = new Token();
+                        allTokens.Add(token.TokenMaker(reader));
                     }
 
-                    return allClients;
+                    return allTokens;
                 }
                 catch (Exception e)
                 {
@@ -39,10 +39,11 @@ namespace MatakDBConnector
                 }
             }
         }
+
         
-        public List<Client> GetAllClientsByOrgId(int orgId, out string errorMessage)
+        public List<Token> GetAllTokensByEmail(string email, out string errorMessage)
         {
-            List<Client> allClients = new List<Client>();
+            List<Token> allTokens = new List<Token>();
             errorMessage = null;
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
@@ -54,17 +55,17 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
 
-                    command.CommandText = "SELECT * FROM postgres.cyberschema1.clients WHERE org_id = (@orgId)";
-                    command.Parameters.AddWithValue("orgId", orgId);
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.tokens WHERE email = (@email)";
+                    command.Parameters.AddWithValue("email", email);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        Client client = new Client();
-                        allClients.Add(client.ClientMaker(reader));
+                        Token token = new Token();
+                        allTokens.Add(token.TokenMaker(reader));
                     }
 
-                    return allClients;
+                    return allTokens;
                 }
                 catch (Exception e)
                 {
@@ -75,9 +76,9 @@ namespace MatakDBConnector
             }
         }
         
-        public List<Client> GetAllClientsByUsername(string username, out string errorMessage)
+        public List<Token> GetAllEmailsByToken(string tokenString, out string errorMessage)
         {
-            List<Client> allClients = new List<Client>();
+            List<Token> allTokens = new List<Token>();
             errorMessage = null;
 
             using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
@@ -89,17 +90,17 @@ namespace MatakDBConnector
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
 
-                    command.CommandText = "SELECT * FROM postgres.cyberschema1.clients WHERE client_username = (@username)";
-                    command.Parameters.AddWithValue("username", username);
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.tokens WHERE token = (@token)";
+                    command.Parameters.AddWithValue("token", tokenString);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        Client client = new Client();
-                        allClients.Add(client.ClientMaker(reader));
+                        Token token = new Token();
+                        allTokens.Add(token.TokenMaker(reader));
                     }
 
-                    return allClients;
+                    return allTokens;
                 }
                 catch (Exception e)
                 {
@@ -110,41 +111,7 @@ namespace MatakDBConnector
             }
         }
         
-        public List<Client> GetAllClientsByUsernameVulnerable(string username, out string errorMessage)
-        {
-            List<Client> allClients = new List<Client>();
-            errorMessage = null;
-
-            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
-            {
-                try
-                {
-                    connection.Open();
-
-
-                    NpgsqlCommand command = new NpgsqlCommand();
-                    command.Connection = connection;
-                    command.CommandText = "SELECT * FROM postgres.cyberschema1.clients WHERE client_username = '" + username + "'";
-                    NpgsqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        Client client = new Client();
-                        allClients.Add(client.ClientMaker(reader));
-                    }
-
-                    return allClients;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    errorMessage = e.ToString();
-                    throw;
-                }
-            }
-        }
-        
-        public int AddNewClient(Client newClient, out string errorMessage)
+        public int AddNewTokenByEmail(Token newToken, out string errorMessage)
         {
             errorMessage = null;
 
@@ -158,8 +125,8 @@ namespace MatakDBConnector
                     command.Connection = connection;                                     
                 
                     command.CommandText =
-                        "INSERT INTO postgres.cyberschema1.clients (org_id, name, surname, client_username) VALUES (@org_id, @name, @surname, @client_username) RETURNING client_id";
-                    newClientCommandHelper(newClient, command);
+                        "INSERT INTO postgres.cyberschema1.tokens (email, token) VALUES (@email, @token) RETURNING token_id";
+                    newTokenCommandHelper(newToken, command);
 
                     return Convert.ToInt32(command.ExecuteScalar());
                 }
@@ -171,5 +138,34 @@ namespace MatakDBConnector
                 }
             }
         }
+        
+        public void DeleteTokenByEmail(string email, out string errorMessage)
+        {
+            errorMessage = null;
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;                                     
+                
+                    command.CommandText =
+                        "DELETE FROM postgres.cyberschema1.tokens WHERE email = (@email)";
+                    command.Parameters.AddWithValue("email", email);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
+        
     }
 }
