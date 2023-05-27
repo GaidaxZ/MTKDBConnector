@@ -108,6 +108,39 @@ namespace MatakDBConnector
             }
         }
         
+        public User GetUserByEmailVulnerable(string email, out string errorMessage)
+        {
+            errorMessage = null;
+
+            using (var connection = new NpgsqlConnection(ConfigParser.ConnString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    
+                    command.CommandText = "SELECT * FROM postgres.cyberschema1.user WHERE email = '" + email + "'";
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        return UserMaker(reader);
+                    }
+
+                    errorMessage = "User not found";
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    errorMessage = e.ToString();
+                    throw;
+                }
+            }
+        }
+        
         public List<User> GetAllUsersByOrgId(int orgId, out string errorMessage)
         {
             List<User> allUsers = new List<User>();
